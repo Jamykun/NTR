@@ -27,6 +27,6 @@ public class UR {
 	}
 	
 	public String toString() {
-		return "UR" + id + " " + ((estLibre() ? "libre" : "non libre : ") /* + (!estLibre() ? "utilisateur " + this.utilisateur.getNum() : "")*/);
+		return "UR" + id + " " + ((estLibre() ? "libre" : "non libre : ") + (!estLibre() ? "utilisateur " + this.utilisateur.getId() : ""));
 	}
 }
