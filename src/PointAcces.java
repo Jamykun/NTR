@@ -1,4 +1,4 @@
-package allocation;
+
 
 
 
@@ -13,32 +13,26 @@ public class PointAcces {
 	public static final int NB_UR = 128;
 	
 	// Parameters
-		private List<ur> ur;
-		private List<utilisateur> users;
-		private cellule cellule;
-		private int nbPaquet;
+	private List<UR> ur;
+	private List<Utilisateur> users;
+	private Cellule cellule;
+	private int nbPaquet;
+	
+	public PointAcces(Cellule c) {
+
+		ur = new ArrayList<UR>();
+		users = new ArrayList<Utilisateur>();
+		this.cellule = c;
+		this.nbPaquet = 0;
 		
-		public PointAcces(cellule c) {
+	}		
 
-			ur = new ArrayList<ur>();
-			users = new ArrayList<utilisateur>();
-			this.cellule = c;
-			this.nbPaquet = 0;
-			
-		}
-		
+	public List<UR> getUr() {
+		return this.ur;
+	}
 
-		public List<ur> getUr() {
-			return this.ur;
-		}
-
-		public List<utilisateur> getUsers() {
-			return this.users;
-		}
-		
-		
-		 
-
-
+	public List<Utilisateur> getUsers() {
+		return this.users;
+	}
 
 }

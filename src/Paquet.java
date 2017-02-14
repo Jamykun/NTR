@@ -1,10 +1,5 @@
-package allocation;
 
-
-
-
-
-public class paquet {
+public class Paquet {
 	
 	// taille de chaque paquet 
 		public static final int PACKET_SIZE = 100;  
@@ -13,10 +8,10 @@ public class paquet {
 		private int debutEnvoie;
 		private int finEnvoie;
 		private int nbBits;
-		private utilisateur user;
+		private Utilisateur user;
 
 		
-		public paquet(utilisateur u, int time) {
+		public Paquet(Utilisateur u, int time) {
 
 			this.creation = time;
 			this.nbBits = PACKET_SIZE;
