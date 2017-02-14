@@ -25,5 +25,9 @@ public class Cellule {
 	public List<PointAcces> getAccessPoints() {		
 		return this.pointAcc;
 	}
+	
+	public int getTemps(){
+		return this.temps;
+	}
 }
 
