@@ -17,7 +17,7 @@ public class Paquet {
 	}
 	
 	public Paquet(Utilisateur u, int creation, int taille) {
-		this.creation = creation;;
+		this.creation = creation;
 		this.user = u;
 		this.nbBits = taille;
 	}

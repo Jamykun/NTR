@@ -5,7 +5,7 @@ import java.util.List;
 import simulation.*;
 
 public class RR implements Algorithme{
-	public List<Utilisateur>getUtilisateur;
+	public List<Utilisateur> utilisateurs;
 
 	@Override
 	public UR allouerUR(UR u) {
@@ -15,14 +15,18 @@ public class RR implements Algorithme{
 
 	@Override
 	public List<Utilisateur> getUtilisateurs() {
+		return utilisateurs;
+	}
+	
+	@Override
+	public void setUtilisateurs(List<Utilisateur> users) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getName() {		
+		return this.getClass().getSimpleName();
 	}
 
 	@Override
@@ -36,11 +40,4 @@ public class RR implements Algorithme{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-	@Override
-	public void setUtilisateurs(List<Utilisateur> users) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

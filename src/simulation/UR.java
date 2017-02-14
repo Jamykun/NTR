@@ -14,7 +14,7 @@ public class UR {
 	
 	// l'affictation de UR a un utilisateur donnee.
 	public void setAffectation(Utilisateur x) {
-		this.utilisateur=x;
+		this.utilisateur = x;
 
 	}
 	 // liberation de UR apres chaque utilisation 
@@ -24,5 +24,9 @@ public class UR {
 	
 	public boolean estLibre(){
 		return (this.utilisateur == null);
+	}
+	
+	public String toString() {
+		return "UR" + id + " " + ((estLibre() ? "libre" : "non libre : ") /* + (!estLibre() ? "utilisateur " + this.utilisateur.getNum() : "")*/);
 	}
 }
