@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 import simulation.*;
 
 public class Simulation {
@@ -11,6 +13,7 @@ public class Simulation {
 		Utilisateur util0 = new Utilisateur(0, pointAcces0, 4);
 		pointAcces0.setUtilisateur(util0);
 
+		HashMap<Integer, Integer> pointsGraph = new HashMap<>();
 		for(int time = 0; time < SIMULATION_TIME; time ++) {
 			// TODO
 		}
