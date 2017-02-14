@@ -1,30 +1,28 @@
 package simulation;
 
-
-public class UR {
-	
-	private Utilisateur utilisateur;
-	
-	private PointAcces pA;
-	
+public class UR {	
+	private Utilisateur utilisateur;	
+	private PointAcces pA;	
 	private int id;
 	
-	// le constructeur de point d'acces une ur � un id et est ds un et un point d'acces   
+	// le constructeur de point d'acces une ur a un id et est ds un et un point d'acces   
 	
 	public UR(int id, PointAcces pointAcces) {
-
 		this.pA = pointAcces;
-		this.id = id;
-		
-}
-	// l'affictation de UR � un utilisateur donnee.
-	public void URaffectation(Utilisateur x) {
+		this.id = id;		
+	}
+	
+	// l'affictation de UR a un utilisateur donnee.
+	public void setAffectation(Utilisateur x) {
 		this.utilisateur=x;
 
 	}
-	 // liberation de UR apr�s chaque utilisation 
+	 // liberation de UR apres chaque utilisation 
 	public void finUtilisation(){
-		this.utilisateur=null;
-}
-
+		this.utilisateur = null;
+	}
+	
+	public boolean estLibre(){
+		return (this.utilisateur == null);
+	}
 }

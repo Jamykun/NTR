@@ -1,16 +1,10 @@
 package simulation;
 
-
-
-
-
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class PointAcces {
-	
+public class PointAcces {	
 	public static final int NB_UR = 128;
 	
 	// Parameters
@@ -20,12 +14,10 @@ public class PointAcces {
 	private int nbPaquet;
 	
 	public PointAcces(Cellule c) {
-
 		ur = new ArrayList<UR>();
 		users = new ArrayList<Utilisateur>();
 		this.cellule = c;
-		this.nbPaquet = 0;
-		
+		this.nbPaquet = 0;		
 	}		
 
 	public List<UR> getUr() {
