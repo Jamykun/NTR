@@ -1,27 +1,29 @@
-package allocation;
+package algorithme;
 
 
 import java.util.List;
 
+import simulation.*;
 
 
-public interface algorithme {
 
-	public ur allouerUR(ur u);
+public interface Algorithme {
+
+	public UR allouerUR(UR u);
 	
 	/*
 	 * Initialiser la liste des utilisateurs
 	 * */
 	
-	public void init(List<utilisateur> users);
+	public void init(List<Utilisateur> users);
 	
 	/*
 	 * Get & Set utilisateurs
 	 * */
 	
-	public List<utilisateur> getUtilisateurs();
+	public List<Utilisateur> getUtilisateurs();
 	
-	public void setUsers(List<utilisateur> users);
+	public void setUsers(List<Utilisateur> users);
 	
 	public int getMknmoyenneProche();
 
