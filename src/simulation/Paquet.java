@@ -1,5 +1,8 @@
 package simulation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Paquet {
 	
 	// taille de chaque paquet 
@@ -10,14 +13,14 @@ public class Paquet {
 	private int nbBits;
 	private Utilisateur user;
 	
-	public Paquet(Utilisateur u, int creation) {
-		this.creation = creation;
+	public Paquet(Utilisateur u, int tickCreation) {
+		this.creation = tickCreation;
 		this.nbBits = PACKET_SIZE;
 		this.user = u;
 	}
 	
-	public Paquet(Utilisateur u, int creation, int taille) {
-		this.creation = creation;
+	public Paquet(Utilisateur u, int tickCreation, int taille) {
+		this.creation = tickCreation;
 		this.user = u;
 		this.nbBits = taille;
 	}
@@ -41,9 +44,21 @@ public class Paquet {
 	public int getNbBits() {
 		return this.nbBits;
 	}
+	
+	public void setNbBits(int nbBits) {
+		this.nbBits = nbBits;
+	}
 
 	public int getCreation() {
 		return creation;
+	}
+	
+	public ArrayList<UR> toUR(Cellule cellule) {
+		ArrayList<UR> urs = new ArrayList<UR>();
+		for(int i = 0; i < this.nbBits; i ++ /*+= PACKET_SIZE*/) {
+			urs.add(new UR(i, cellule));
+		}
+		return urs;
 	}
 	
 }

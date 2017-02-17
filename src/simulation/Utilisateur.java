@@ -11,32 +11,30 @@ public class Utilisateur {
 		private int id;
 		private List<Paquet> paquetAenvoyer;
 		private Deque<Paquet> fifo;
-		private PointAcces pA;
+		private Cellule cellule;
+		private int moyenBruit;
+		private int moyenPuissance;
 		private int debitCourrant;
-		private int moyenProche;
-		
 
 		/**
 		 * Constructeur
 		 * 
 		 */
-		public Utilisateur(int id, PointAcces PointAcces, int mp) {
+		public Utilisateur(int id, Cellule cellule, int moyenBruit, int moyenPuissance) {
 
 			this.id = id;
-			this.pA = PointAcces;
-			this.moyenProche = mp;
+			this.cellule = cellule;
+			this.moyenBruit = moyenBruit;
+			this.moyenPuissance = moyenPuissance;
 			this.paquetAenvoyer = new ArrayList<Paquet>();
-			fifo = new LinkedList<Paquet>();
-						
+			fifo = new LinkedList<Paquet>();						
 		}
 
-		public void creerPaquet() {
-			
-			Paquet p = new Paquet(this, pA.getTemps());
+		public void creerPaquet() {			
+			Paquet p = new Paquet(this, 1234);
 			PaquetValide(p);
-			fifo.add(p);
-				
-	}
+			fifo.add(p);				
+		}
 		
 		/*
 		 * Validation du paquet
@@ -50,7 +48,11 @@ public class Utilisateur {
 			}
 			
 		}
-	
+		
+		public void envoiUR(UR ur) {
+			System.out.println("UR" + ur.getId() + " reÃ§u");
+		}
+		
 		public void envoiePaquet(){
 			
 			int bitsAenvoyer = this.getPacketActuel().getNbBits() - debitCourrant;
@@ -65,11 +67,6 @@ public class Utilisateur {
 
 		public int getDebitCourrant() {
 			return debitCourrant;
-		}
-
-
-		public void setDebitCourrant(int debitCourrant) {
-			this.debitCourrant = debitCourrant;
 		}
 
 
@@ -89,24 +86,35 @@ public class Utilisateur {
 		}
 		
 		/*
-		 * Enlever un paquet envoyé du buffer
+		 * Enlever un paquet envoyï¿½ du buffer
 		 *  
 		 * */
 				
 		public void paquetEnvoye() {
 
-			getPacketActuel().setFinEnvoie(pA.getTemps());
+			getPacketActuel().setFinEnvoie(2345);
 			this.paquetAenvoyer.add(getPacketActuel());
 			fifo.removeFirst();
 
 		}
-
-		public int getMoyenProche() {
-			return moyenProche;
+		
+		public int getSNR() {
+			return moyenBruit / moyenPuissance;
+		}
+		
+		public int getMoyenBruit() {
+			return moyenBruit;
 		}
 
-		public void setMoyenProche(int moyenProche) {
-			this.moyenProche = moyenProche;
+		public void setMoyenBruit(int moyenBruit) {
+			this.moyenBruit = moyenBruit;
 		}
 
+		public int getMoyenPuissance() {
+			return moyenPuissance;
+		}
+
+		public void setMoyenPuissance(int moyenPuissance) {
+			this.moyenPuissance = moyenPuissance;
+		}
 }
