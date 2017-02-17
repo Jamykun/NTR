@@ -35,6 +35,12 @@ public class PointAcces {
 			return null;
 		return this.ur.get(i);
 	}
+	
+	public int getTemps() {
+
+		return cellule.getTemps();
+
+	}
 
 	public List<UR> getUrs() {
 		return this.ur;
