@@ -1,17 +1,21 @@
 package simulation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Cellule {	
 	public final int NB_UR = 128;
 	
 	private List<UR> ur;
 	private List<Utilisateur> users;
+	private HashMap<Utilisateur, Paquet> buffersUsers;
 	private int nbPaquetTotal;
 	private int numero;
 	private int timeslotOffset = 0;
+
 	
 	public Cellule(int numero, int timeslotOffset) {	
 		this.numero = numero;
@@ -23,13 +27,21 @@ public class Cellule {
 		this.users = new ArrayList<Utilisateur>();
 		this.nbPaquetTotal = 0;		
 		this.timeslotOffset = timeslotOffset;
+		this.buffersUsers = new HashMap<>();
 	}
 	
-	private void createListUR() {
-		this.ur = new ArrayList<UR>();
-		for(int i = 0; i < NB_UR * timeslotOffset; i++) {
-			this.ur.add(new UR(i, this));
+	private void createListUR() {		
+		for(int i = 0; i < NB_UR; i++) {
+			this.ur.get(i).setAffectation(null);
 		}
+	}
+	
+	public void addPaquetsFromInternet() {
+		for(int i = 0; i < users.size(); i++) {
+			Utilisateur util = users.get(i);
+			int length = ThreadLocalRandom.current().nextInt(1, 100000000);
+			buffersUsers.put(util, new Paquet(util, length));
+		}		
 	}
 	
 	// Paquet demande une UR libre
@@ -50,5 +62,23 @@ public class Cellule {
 	
 	public void changeTimeslot() {
 		createListUR();
+		for(int i = 0; i < users.size(); i++) {
+			this.users.get(i).clearUR();
+		}
+	}
+	
+	public void sendUR(Utilisateur util, Paquet p) {
+		// TODO : Récuperer entre 1 et 10 bits du buffer de l'util
+		// Créer l'UR à partir des bits récupérer
+		// Enlever les bits récup dans le buffer 
+		// Envoyer l'UR à l'util
+		
+	}
+	
+	public void sendPaquet(Paquet paquetEnvoye) {
+		paquetEnvoye.setDebutEnvoie(Simulation.getTemps());
+		// TODO : Latence
+		paquetEnvoye.setFinEnvoie(Simulation.getTemps());
+		System.out.println("Cellule : Paquet envoyé " + paquetEnvoye.toString());
 	}
 }

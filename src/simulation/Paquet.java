@@ -5,22 +5,16 @@ import java.util.List;
 
 public class Paquet {
 	
-	// taille de chaque paquet 
-	public static final int PACKET_SIZE = 100;  	
+	// taille de chaque paquet 	
+	public static final int PACKET_SIZE = 100;  
 	private int creation;
 	private int debutEnvoie;
 	private int finEnvoie;
 	private int nbBits;
 	private Utilisateur user;
 	
-	public Paquet(Utilisateur u, int tickCreation) {
-		this.creation = tickCreation;
-		this.nbBits = PACKET_SIZE;
-		this.user = u;
-	}
-	
-	public Paquet(Utilisateur u, int tickCreation, int taille) {
-		this.creation = tickCreation;
+	public Paquet(Utilisateur u, int taille) {
+		this.creation = Simulation.getTemps();
 		this.user = u;
 		this.nbBits = taille;
 	}
@@ -55,10 +49,9 @@ public class Paquet {
 	
 	public ArrayList<UR> toUR(Cellule cellule) {
 		ArrayList<UR> urs = new ArrayList<UR>();
-		for(int i = 0; i < this.nbBits; i ++ /*+= PACKET_SIZE*/) {
+		for(int i = 0; i < this.nbBits; i += PACKET_SIZE) {
 			urs.add(new UR(i, cellule));
 		}
 		return urs;
-	}
-	
+	}	
 }

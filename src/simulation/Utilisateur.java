@@ -9,7 +9,8 @@ public class Utilisateur {
 	
 	// Parameters
 		private int id;
-		private List<Paquet> paquetAenvoyer;
+		private List<Paquet> paquetsAenvoyer;
+		private List<UR> urRecues;
 		private Deque<Paquet> fifo;
 		private Cellule cellule;
 		private int moyenBruit;
@@ -26,15 +27,34 @@ public class Utilisateur {
 			this.cellule = cellule;
 			this.moyenBruit = moyenBruit;
 			this.moyenPuissance = moyenPuissance;
-			this.paquetAenvoyer = new ArrayList<Paquet>();
+			this.paquetsAenvoyer = new ArrayList<Paquet>();
+			this.urRecues = new ArrayList<UR>();
 			fifo = new LinkedList<Paquet>();						
+		}
+		
+		public void envoiUR(UR ur) {
+			System.out.println("UR" + ur.getId() + " reçu");
+			urRecues.add(ur);
+			if(fifo.size() > 0) {
+				Paquet p = fifo.peek();
+				p.setDebutEnvoie(Simulation.getTemps());
+				cellule.sendPaquet(p);
+			}
+		}
+		
+		public void clearUR() {
+			urRecues.clear();
 		}
 
 		public void creerPaquet() {			
-			Paquet p = new Paquet(this, 1234);
+			Paquet p = new Paquet(this, Simulation.getTemps(), 1024);
+			
+			
 			PaquetValide(p);
 			fifo.add(p);				
 		}
+		
+		public P
 		
 		/*
 		 * Validation du paquet
@@ -49,9 +69,7 @@ public class Utilisateur {
 			
 		}
 		
-		public void envoiUR(UR ur) {
-			System.out.println("UR" + ur.getId() + " reçu");
-		}
+		
 		
 		public void envoiePaquet(){
 			
@@ -82,7 +100,7 @@ public class Utilisateur {
 		}
 
 		public List<Paquet> getPaquetsAenvoyer() {
-			return paquetAenvoyer;
+			return paquetsAenvoyer;
 		}
 		
 		/*
@@ -93,7 +111,7 @@ public class Utilisateur {
 		public void paquetEnvoye() {
 
 			getPacketActuel().setFinEnvoie(2345);
-			this.paquetAenvoyer.add(getPacketActuel());
+			this.paquetsAenvoyer.add(getPacketActuel());
 			fifo.removeFirst();
 
 		}
