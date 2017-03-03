@@ -67,13 +67,6 @@ public class Cellule {
 		}
 	}
 	
-	public void sendUR(Utilisateur util, Paquet p) {
-		// TODO : Récuperer entre 1 et 10 bits du buffer de l'util
-		// Créer l'UR à partir des bits récupérer
-		// Enlever les bits récup dans le buffer 
-		// Envoyer l'UR à l'util
-		
-	}
 	
 	public void sendPaquet(Paquet paquetEnvoye) {
 		paquetEnvoye.setDebutEnvoie(Simulation.getTemps());

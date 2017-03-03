@@ -38,8 +38,7 @@ public class Utilisateur {
 		
 		// A expliquer.....
 		
-		public void envoiUR(UR ur) {
-			System.out.println("UR" + ur.getId() + " reçu");
+		public void URrecu(UR ur) {			
 			urRecues.add(ur);
 			if(fifo.size() > 0) {
 				Paquet p = fifo.peek();
@@ -51,13 +50,13 @@ public class Utilisateur {
 			urRecues.clear();
 		}
 
-		public void creerPaquet() {
+		/*public void creerPaquet() {
 			
 			Paquet p = new Paquet(this, Simulation.getTemps(), 1024);
 			PaquetValide(p);
 			fifo.add(p);
 				
-	}
+	}*/
 		
 		/*
 		 * Validation du paquet
@@ -110,7 +109,7 @@ public class Utilisateur {
 		}
 		
 		/*
-		 * Enlever un paquet envoyé du buffer
+		 * Enlever un paquet envoyï¿½ du buffer
 		 *  
 		 * */
 				

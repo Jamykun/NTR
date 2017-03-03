@@ -5,6 +5,8 @@ public class UR {
 	private Cellule cellule;	
 	private int id;
 	private int nbBits;
+	private int debutEnvoie;
+	private int finEnvoie;
 	
 	// le constructeur de point d'acces une ur a un id et est ds un et un point d'acces   
 	
@@ -38,5 +40,21 @@ public class UR {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public int getNbBits() {
+		return nbBits;
+	}
+	
+	public void setDebutEnvoie() {
+		debutEnvoie = Simulation.getTemps();
+	}
+	
+	public void setFinEnvoie() {
+		finEnvoie = Simulation.getTemps();
+	}
+	
+	public int getDelai() {
+		return finEnvoie - debutEnvoie;
 	}
 }
