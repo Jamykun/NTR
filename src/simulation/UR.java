@@ -22,6 +22,15 @@ public class UR {
 	
 	// l'affictation de UR a un utilisateur donnee.
 	public void setAffectation(Utilisateur utilsateur) {
+		//int i = 0;
+		if( !this.estLibre()) {
+			
+		}
+		
+		//if(i == this.ur.size())
+			//return null;
+		//System.out.println("UR"+this);
+		//return this.ur.get(i);
 		this.utilisateur = utilsateur;
 
 	}
@@ -56,5 +65,9 @@ public class UR {
 	
 	public int getDelai() {
 		return finEnvoie - debutEnvoie;
+	}
+	
+	public Utilisateur getUtilisateur(){
+		return this.utilisateur;
 	}
 }

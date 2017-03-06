@@ -1,5 +1,7 @@
 package simulation;
 
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +14,7 @@ public class Cellule {
 	private List<UR> ur;
 	private List<Utilisateur> users;
 	private HashMap<Utilisateur, Paquet> buffersUsers;
+	private int latence=0;
 	private int nbPaquetTotal;
 	private int numero;
 	private int timeslotOffset = 0;
@@ -20,8 +23,10 @@ public class Cellule {
 	public Cellule(int numero, int timeslotOffset) {	
 		this.numero = numero;
 		this.ur = new ArrayList<UR>();
+	
 		for(int i = 0; i < NB_UR; i++) {
 			this.ur.add(new UR(i, this));
+		
 		}
 		
 		this.users = new ArrayList<Utilisateur>();
@@ -53,6 +58,7 @@ public class Cellule {
 		
 		if(i == this.ur.size())
 			return null;
+		System.out.println("UR"+this.ur.get(i));
 		return this.ur.get(i);
 	}
 	
@@ -72,6 +78,39 @@ public class Cellule {
 		paquetEnvoye.setDebutEnvoie(Simulation.getTemps());
 		// TODO : Latence
 		paquetEnvoye.setFinEnvoie(Simulation.getTemps());
-		System.out.println("Cellule : Paquet envoyÃ© " + paquetEnvoye.toString());
+		System.out.println("Cellule : Paquet envoyé " + paquetEnvoye.toString());
 	}
+	
+	public List<UR> getUR(){
+		return this.ur;
+	}
+	
+	// Latence pour l'envoie de tous les paquets
+	public void CalcuLatence(){
+		int nbUtilisateurs=0;
+		int latenceActuelle =0;
+		Utilisateur u= null;
+		for (UR ur : this.getUR()){
+			u = ur.getUtilisateur();
+		}
+		if (u!=null){
+			nbUtilisateurs++;
+			List<Paquet> ps = u.getPaquetsAenvoyer();
+			
+			latenceActuelle =	(int)ps.stream().mapToInt(x->x.getFinEnvoie()-x.getDebutEnvoie()).count();
+			
+			if(ps.size()>0){
+				latenceActuelle = latenceActuelle/ps.size();
+			}
+		
+		}
+		if(nbUtilisateurs>0){
+			latenceActuelle = latenceActuelle/nbUtilisateurs;
+			this.latence = this.latence + latenceActuelle;
+		}
+		
+
+		
+	}
+	
 }
