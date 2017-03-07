@@ -7,6 +7,7 @@ public class UR {
 	private int nbBits;
 	private int debutEnvoie;
 	private int finEnvoie;
+	private boolean finDePasquet = false; // TODO: Gestion des fins de paquet dans l'utilisateur pour calculer la latence
 	
 	// le constructeur de point d'acces une ur a un id et est ds un et un point d'acces   
 	
@@ -22,15 +23,6 @@ public class UR {
 	
 	// l'affictation de UR a un utilisateur donnee.
 	public void setAffectation(Utilisateur utilsateur) {
-		//int i = 0;
-		if( !this.estLibre()) {
-			
-		}
-		
-		//if(i == this.ur.size())
-			//return null;
-		//System.out.println("UR"+this);
-		//return this.ur.get(i);
 		this.utilisateur = utilsateur;
 
 	}

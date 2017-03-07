@@ -1,10 +1,11 @@
 package simulation;
 
-
-
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -13,26 +14,29 @@ public class Cellule {
 	
 	private List<UR> ur;
 	private List<Utilisateur> users;
-	private HashMap<Utilisateur, Paquet> buffersUsers;
-	private int latence=0;
+	private HashMap<Utilisateur, Deque<Paquet>> buffersUsers;
 	private int nbPaquetTotal;
 	private int numero;
 	private int timeslotOffset = 0;
+	private int latence=0;
+	
 
 	
 	public Cellule(int numero, int timeslotOffset) {	
 		this.numero = numero;
 		this.ur = new ArrayList<UR>();
-	
 		for(int i = 0; i < NB_UR; i++) {
 			this.ur.add(new UR(i, this));
-		
 		}
 		
 		this.users = new ArrayList<Utilisateur>();
 		this.nbPaquetTotal = 0;		
 		this.timeslotOffset = timeslotOffset;
 		this.buffersUsers = new HashMap<>();
+	}
+	
+	public List<UR> getUr() {
+		return this.ur;
 	}
 	
 	private void createListUR() {		
@@ -44,9 +48,26 @@ public class Cellule {
 	public void addPaquetsFromInternet() {
 		for(int i = 0; i < users.size(); i++) {
 			Utilisateur util = users.get(i);
-			int length = ThreadLocalRandom.current().nextInt(1, 100000000);
-			buffersUsers.put(util, new Paquet(util, length));
+			int length = ThreadLocalRandom.current().nextInt(10, 2000);
+			
+			if(!buffersUsers.containsKey(util)) {
+				buffersUsers.put(util, new LinkedList<Paquet>());
+			}
+			buffersUsers.get(util).add(new Paquet(util, length));
+			buffersUsers.put(util, buffersUsers.get(util));
 		}		
+	}
+	
+	public Paquet getPacketActuel(Utilisateur u) {
+		Deque<Paquet> bufferUtil = buffersUsers.get(u);
+		if(bufferUtil.size() == 0) {
+			return null;
+		}
+		if(bufferUtil.getFirst().getNbBits() == 0) {
+			bufferUtil.peek();
+		}
+		return bufferUtil.getFirst();
+
 	}
 	
 	// Paquet demande une UR libre
@@ -58,7 +79,6 @@ public class Cellule {
 		
 		if(i == this.ur.size())
 			return null;
-		System.out.println("UR"+this.ur.get(i));
 		return this.ur.get(i);
 	}
 	
@@ -74,43 +94,12 @@ public class Cellule {
 	}
 	
 	
-	public void sendPaquet(Paquet paquetEnvoye) {
+	/*public void sendPaquet(Paquet paquetEnvoye) {
 		paquetEnvoye.setDebutEnvoie(Simulation.getTemps());
 		// TODO : Latence
 		paquetEnvoye.setFinEnvoie(Simulation.getTemps());
-		System.out.println("Cellule : Paquet envoyé " + paquetEnvoye.toString());
-	}
+		System.out.println("Cellule : Paquet envoyÃ© " + paquetEnvoye.toString());
+	}*/
 	
-	public List<UR> getUR(){
-		return this.ur;
-	}
-	
-	// Latence pour l'envoie de tous les paquets
-	public void CalcuLatence(){
-		int nbUtilisateurs=0;
-		int latenceActuelle =0;
-		Utilisateur u= null;
-		for (UR ur : this.getUR()){
-			u = ur.getUtilisateur();
-		}
-		if (u!=null){
-			nbUtilisateurs++;
-			List<Paquet> ps = u.getPaquetsAenvoyer();
-			
-			latenceActuelle =	(int)ps.stream().mapToInt(x->x.getFinEnvoie()-x.getDebutEnvoie()).count();
-			
-			if(ps.size()>0){
-				latenceActuelle = latenceActuelle/ps.size();
-			}
-		
-		}
-		if(nbUtilisateurs>0){
-			latenceActuelle = latenceActuelle/nbUtilisateurs;
-			this.latence = this.latence + latenceActuelle;
-		}
-		
-
-		
-	}
 	
 }

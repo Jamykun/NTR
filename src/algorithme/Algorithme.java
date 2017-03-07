@@ -6,8 +6,6 @@ import java.util.List;
 import simulation.*;
 
 public interface Algorithme {
-	public Utilisateur allouerUR(UR u);
-	
 	/*
 	 * Initialiser la liste des utilisateurs
 	 * */	

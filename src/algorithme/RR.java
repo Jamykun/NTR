@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import calcul.Latence;
 import simulation.*;
 
 public class RR implements Algorithme{
@@ -13,7 +14,7 @@ public class RR implements Algorithme{
 	private int i = 0;
 	private int nbBitsTransmis = 0;
 	private HashMap<Utilisateur, Integer> nbBitsTransmisParUtil;
-	private HashMap<Utilisateur, UR> associationsURparUtilisateur;
+	//private HashMap<Utilisateur, UR> associationsURparUtilisateur;
 	private int lastTime = 0;
 	
 	public RR(Cellule cellule) {
@@ -24,14 +25,33 @@ public class RR implements Algorithme{
 
 	@Override
 	public void allouerUR(UR ur, Utilisateur util) {
-		associationsURparUtilisateur.put(util, ur);
+		//associationsURparUtilisateur.put(util, ur);		
+		ur.setAffectation(util);
+		util.affecterUR(ur);
+		Helper.print("UR" + ur.getId() + " affectée Util" + util.getId() + " - " + ur.getNbBits() + " bits");
 	}
 	
 	public void envoyerUR() {
 		// Envoyer toutes les UR a la fin des associations
+		for(Utilisateur u : this.utilisateurs) {
+			nbBitsTransmisParUtil.put(u, 0);
+			if(cellule.getPacketActuel(u) != null) {
+				UR ur = u.peekUR();
+				while(ur != null) {
+					if(ur != null) {						
+						cellule.getPacketActuel(u).subNbBits(ur.getNbBits());
+						ur.setAffectation(null);	
+						nbBitsTransmisParUtil.put(u, nbBitsTransmisParUtil.get(u) + ur.getNbBits());
+						Helper.print("UR" + ur.getId() + " : " + ur.getNbBits() + " bits du paquet envoyé. Reste " + cellule.getPacketActuel(u).getNbBits() + " bits");
+					}
+					ur = u.peekUR();
+				}
+			}
+			Helper.print("Débit " + getDebit(u) + " bits/tick");			
+		}		
 	}
 	
-	public Utilisateur envoyerUR(UR ur) {
+	/*public Utilisateur envoyerUR(UR ur) {
 		// TODO Ancien : Récuperer entre 1 et 10 bits du buffer de l'util
 				// Créer l'UR à partir des bits récupérer
 				// Enlever les bits récup dans le buffer 
@@ -59,7 +79,7 @@ public class RR implements Algorithme{
 			return utilisateurs.get(i-1);
 		}
 		return null;		
-	}
+	}*/
 	
 	public void rndPause() {
 		Random randomGenerator = new Random();
@@ -98,8 +118,14 @@ public class RR implements Algorithme{
 	}
 	public int getDebit(Utilisateur u){
 		int time = Simulation.getTemps();
-		int debit = nbBitsTransmisParUtil.get(u) / (time - lastTime);
-		lastTime = time;
+		int debit;
+		if(time - lastTime == 0) {
+			debit = nbBitsTransmisParUtil.get(u);
+		} 
+		else {
+			debit = nbBitsTransmisParUtil.get(u) / (time - lastTime);
+			lastTime = time;
+		}
 		nbBitsTransmisParUtil.put(u, 0);
 		return debit;
 	}

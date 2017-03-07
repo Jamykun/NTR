@@ -6,7 +6,7 @@ import java.util.List;
 public class Paquet {
 	
 	// taille de chaque paquet 	
-	public static final int PACKET_SIZE = 100;  
+	//public static final int PACKET_SIZE = 100;  
 	private int creation;
 	private int debutEnvoie;
 	private int finEnvoie;
@@ -47,11 +47,18 @@ public class Paquet {
 		return creation;
 	}
 	
+	public void subNbBits(int nbBits) {
+		this.nbBits -= nbBits;
+		if(this.nbBits < 0) {
+			this.nbBits = 0;
+		}
+	}
+	/*
 	public ArrayList<UR> toUR(Cellule cellule) {
 		ArrayList<UR> urs = new ArrayList<UR>();
 		for(int i = 0; i < this.nbBits; i += PACKET_SIZE) {
 			urs.add(new UR(i, cellule));
 		}
 		return urs;
-	}	
+	}	*/
 }

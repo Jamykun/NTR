@@ -11,7 +11,7 @@ public class Utilisateur {
 		private int id;
 		private List<Paquet> paquetAenvoyer;
 		private List<UR> urRecues;
-		private Deque<Paquet> fifo;
+		//private Deque<Paquet> fifo;
 		private Cellule cellule;
 		private int debitCourrant;
 		private int moyenBruit;
@@ -31,32 +31,35 @@ public class Utilisateur {
 			//this.moyenPuissance = moyenPuissance;
 			this.paquetAenvoyer = new ArrayList<Paquet>();
 			this.urRecues = new ArrayList<UR>();
-			fifo = new LinkedList<Paquet>();
+			//fifo = new LinkedList<Paquet>();
 			this.ProcheLoin = d;
 						
 		}
 		
 		// A expliquer.....
 		
-		public void URrecu(UR ur) {			
+		public void affecterUR(UR ur) {			
 			urRecues.add(ur);
-			if(fifo.size() > 0) {
+			/*if(fifo.size() > 0) {
 				Paquet p = fifo.peek();
 				p.setDebutEnvoie(Simulation.getTemps());
 				cellule.sendPaquet(p);
-			}
+			}*/
 		}
 		public void clearUR() {
 			urRecues.clear();
 		}
+		
+		public UR peekUR() {
+			if(urRecues.size() > 0) {
+				UR u = urRecues.get(0);
+				urRecues.remove(0);
+				return u;
+			}
+			return null;
+		}
 
-		/*public void creerPaquet() {
-			
-			Paquet p = new Paquet(this, Simulation.getTemps(), 1024);
-			PaquetValide(p);
-			fifo.add(p);
-				
-	}*/
+		
 		
 		/*
 		 * Validation du paquet
@@ -71,7 +74,7 @@ public class Utilisateur {
 			
 		}
 	
-		public void envoiePaquet(){
+		/*public void envoiePaquet(){
 			
 			int bitsAenvoyer = this.getPacketActuel().getNbBits() - debitCourrant;
 			
@@ -80,7 +83,7 @@ public class Utilisateur {
 
 			this.getPacketActuel().setNbBits(bitsAenvoyer);
 
-		}
+		}*/
 
 
 		public int getDebitCourrant() {
@@ -98,11 +101,7 @@ public class Utilisateur {
 		}
 
 		
-		public Paquet getPacketActuel() {
-
-			return fifo.peek();  // premier paquet du fifo
-
-		}
+		
 
 		public List<Paquet> getPaquetsAenvoyer() {
 			return paquetAenvoyer;
@@ -113,13 +112,13 @@ public class Utilisateur {
 		 *  
 		 * */
 				
-		public void paquetEnvoye() {
+		/*public void paquetEnvoye() {
 
 			getPacketActuel().setFinEnvoie(2345);
 			this.paquetAenvoyer.add(getPacketActuel());
 			fifo.removeFirst();
 
-		}
+		}*/
 		public int getSNR() {
 			return moyenBruit / moyenPuissance;
 		}
