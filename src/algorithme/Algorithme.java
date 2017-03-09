@@ -2,7 +2,6 @@ package algorithme;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import simulation.*;
 import static simulation.Simulation.NB_PORTEUSES;
@@ -23,6 +22,7 @@ public class Algorithme {
         this.nbUrAffectee = 0;
         this.nbBitsTransmisParUtil = new HashMap<>();
         this.nbBitsATransmettreParUtil = new HashMap<>();
+        this.cellule.setAlgorithme(this);
     }
     
     protected int getNbBitsATransmettre(Utilisateur util) {
@@ -68,6 +68,10 @@ public class Algorithme {
      * @return Debit en bits/tick moyen
      */
     public int getDebit(Utilisateur u){
+        if(!nbBitsTransmisParUtil.containsKey(u)) {
+            return 0;
+        }
+
         int time = Simulation.getTemps();
         int debit;
         if(time - time_dernierReleveDebit == 0) {

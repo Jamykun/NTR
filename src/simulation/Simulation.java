@@ -27,6 +27,7 @@ public class Simulation {
                     Helper.print("Timeslot " + (tick + timeslot));
                     rr.traiterTimeslot();
 
+                    System.out.println("\nAppuyer sur une touche pour passer au timeslot " + (getTemps() + 1));
                     System.in.read();
                     rr.changerTimeslot();                           
                     //Helper.print("Latence " + Latence.CalculLatence(u) + " tick");
