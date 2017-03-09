@@ -1,133 +1,68 @@
 package algorithme;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
+import simulation.Cellule;
+import simulation.Helper;
+import static simulation.Simulation.NB_PORTEUSES;
+import simulation.UR;
+import simulation.Utilisateur;
 
-import calcul.Latence;
-import simulation.*;
+public class RR extends Algorithme {
+    private Iterator<Utilisateur> it = null;
+    
+    public RR(Cellule cellule) {
+        super(cellule);
+    }  
+    
+    private UR allouerUR() {
+        Utilisateur util = null;
+        boolean paquetAEnvoyer = false;
+        UR ur = cellule.getURlibre();        
 
-public class RR implements Algorithme{
-	private ArrayList<Utilisateur> utilisateurs;
-	private Cellule cellule;
-	private int i = 0;
-	private int nbBitsTransmis = 0;
-	private HashMap<Utilisateur, Integer> nbBitsTransmisParUtil;
-	//private HashMap<Utilisateur, UR> associationsURparUtilisateur;
-	private int lastTime = 0;
-	
-	public RR(Cellule cellule) {
-		this.cellule = cellule;
-		nbBitsTransmisParUtil = new HashMap<>();
-		this.utilisateurs = new ArrayList<>();
-	}
+        // Si on est arrivé au bout de la liste des utilisateurs, on retourne au debut de la liste
+        if (this.it == null || !this.it.hasNext()) {
+            this.it = this.cellule.getUsers().iterator();
+        }
+        
+        //On recherche un utilisateur qui a un paquet à envoyer
+        while(this.it.hasNext() && !paquetAEnvoyer){
+            util = this.it.next();
+            if(cellule.getNbBitsAEnvoyer(util) > 0){
+                // S'il y aura toujours des bits à transmettre
+                if(cellule.getNbBitsAEnvoyer(util) - this.getNbBitsATransmettre(util) > 0) {
+                    paquetAEnvoyer = true;
+                    this.addNbBitsATransmettre(util, ur.getNbBits());
+                }                
+            }
+        }
 
-	@Override
-	public void allouerUR(UR ur, Utilisateur util) {
-		//associationsURparUtilisateur.put(util, ur);		
-		ur.setAffectation(util);
-		util.affecterUR(ur);
-		Helper.print("UR" + ur.getId() + " affectée Util" + util.getId() + " - " + ur.getNbBits() + " bits");
-	}
-	
-	public void envoyerUR() {
-		// Envoyer toutes les UR a la fin des associations
-		for(Utilisateur u : this.utilisateurs) {
-			nbBitsTransmisParUtil.put(u, 0);
-			if(cellule.getPacketActuel(u) != null) {
-				UR ur = u.peekUR();
-				while(ur != null) {
-					if(ur != null) {						
-						cellule.getPacketActuel(u).subNbBits(ur.getNbBits());
-						ur.setAffectation(null);	
-						nbBitsTransmisParUtil.put(u, nbBitsTransmisParUtil.get(u) + ur.getNbBits());
-						Helper.print("UR" + ur.getId() + " : " + ur.getNbBits() + " bits du paquet envoyé. Reste " + cellule.getPacketActuel(u).getNbBits() + " bits");
-					}
-					ur = u.peekUR();
-				}
-			}
-			Helper.print("Débit " + getDebit(u) + " bits/tick");			
-		}		
-	}
-	
-	/*public Utilisateur envoyerUR(UR ur) {
-		// TODO Ancien : Récuperer entre 1 et 10 bits du buffer de l'util
-				// Créer l'UR à partir des bits récupérer
-				// Enlever les bits récup dans le buffer 
-				// Envoyer l'UR à l'util	
-		
-		if(i >= utilisateurs.size()) {
-			i = 0;
-		}
-		
-		if(utilisateurs.size() > 0) {
-			Utilisateur util = utilisateurs.get(i);
-			ur.setDebutEnvoie();
-			rndPause();
-			utilisateurs.get(i).URrecu(ur);			
-			ur.setFinEnvoie();
-			
-			System.out.println("UR" + ur.getId() + ">Util"+ util.getId() + " - NbBits = " + ur.getNbBits() + " Délai = " + ur.getDelai());
-			
-			int nbBits = ur.getNbBits();
-			if(nbBitsTransmisParUtil.containsKey(util)) {
-				nbBits += nbBitsTransmisParUtil.get(util);
-			}
-			nbBitsTransmisParUtil.put(util, nbBits);
-			i++;
-			return utilisateurs.get(i-1);
-		}
-		return null;		
-	}*/
-	
-	public void rndPause() {
-		Random randomGenerator = new Random();
-		try {
-			Thread.sleep(randomGenerator.nextInt(1500) + 500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+        // Si on a trouvé un utilisateur qui à un paquet à envoyer, on lui alloue une UR
+        if(util != null && paquetAEnvoyer){
+            this.affecterUR(ur, util);            
+        }
 
-	@Override
-	public List<Utilisateur> getUtilisateurs() {
-		return utilisateurs;
-	}
-	
-	@Override
-	public void setUtilisateurs(ArrayList<Utilisateur> users) {
-		this.utilisateurs = users;
-	}
-	
-	public void setUtilisateur(Utilisateur user) {
-		this.utilisateurs.add(user);
-	}
-
-	@Override
-	public String getName() {		
-		return this.getClass().getSimpleName();
-	}
-
-	@Override
-	public int getMknmoyen(Utilisateur u) {
-		switch (u.getProcheLoin()) {
-			case PROCHE : return 6;
-			default : return 4;
-		}
-	}
-	public int getDebit(Utilisateur u){
-		int time = Simulation.getTemps();
-		int debit;
-		if(time - lastTime == 0) {
-			debit = nbBitsTransmisParUtil.get(u);
-		} 
-		else {
-			debit = nbBitsTransmisParUtil.get(u) / (time - lastTime);
-			lastTime = time;
-		}
-		nbBitsTransmisParUtil.put(u, 0);
-		return debit;
-	}
+        return ur;
+    }
+    
+    public void traiterTimeslot() {
+        // Affectations
+        for(int i = 0; i < NB_PORTEUSES; i++) {
+            // Pour chaque porteuse, on alloue une UR
+            UR ur = this.allouerUR();
+            if(!ur.estLibre()) { // Si l'UR est affectée à un utilisateur, on l'ajouter à la file des UR à envoyer
+                this.urAEnvoyer.add(ur);
+            }
+        }
+        
+        // Une fois que toutes les affectations ont été réalisées, ont peut envoyer les UR et ainsi traiter le timeslot courant
+        for(UR ur : this.urAEnvoyer) {
+            int nbBitsRestant = cellule.getNbBitsAEnvoyer(ur.getUtilisateur()) - ur.getNbBits();
+            Helper.print(getName() + ": UR" + ur.getId() + " > Util" + ur.getUtilisateur().getId() + " : " + ur.getNbBits() + " bits envoyés. Reste " + ((nbBitsRestant < 0) ? "0" : nbBitsRestant) + " bits");
+ 
+            this.cellule.envoyerUR(ur);
+            this.calculNbBitsTransmis(ur);
+        }       
+    }    
 }
-

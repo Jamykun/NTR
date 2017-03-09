@@ -4,124 +4,77 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
-public class Utilisateur {
-	
-	// Parameters
-		private int id;
-		private List<Paquet> paquetAenvoyer;
-		private List<UR> urRecues;
-		//private Deque<Paquet> fifo;
-		private Cellule cellule;
-		private int debitCourrant;
-		private int moyenBruit;
-		private int moyenPuissance;
-		private DistancePointAcces ProcheLoin;
+public class Utilisateur {	
+        private int id;
+        private List<Paquet> paquetAenvoyer = new ArrayList<>();
+        private List<UR> urRecues = new ArrayList<>();
+        private Cellule cellule;
+        /*private int debitCourrant;
+        private int moyenBruit;
+        private int moyenPuissance;*/
+        private DistancePointAcces distancePointAcces;
+        
+        public Utilisateur(int id, Cellule cellule) {
+            this.id = id;
+            this.cellule = cellule;
+            this.distancePointAcces = rndDistance();
+        }
 		
+        public Utilisateur(int id, Cellule cellule, DistancePointAcces distancePointAcces) {
+            this.id = id;
+            this.cellule = cellule;
+            this.distancePointAcces = distancePointAcces;
+        }
 
-		/**
-		 * Constructeur
-		 * 
-		 */
-		public Utilisateur(int id, Cellule cellule, DistancePointAcces d) {
-
-			this.id = id;
-			this.cellule = cellule;
-			//this.moyenBruit = moyenBruit;
-			//this.moyenPuissance = moyenPuissance;
-			this.paquetAenvoyer = new ArrayList<Paquet>();
-			this.urRecues = new ArrayList<UR>();
-			//fifo = new LinkedList<Paquet>();
-			this.ProcheLoin = d;
-						
-		}
+        private DistancePointAcces rndDistance() {
+            Random randomGenerator = new Random();
+            int randomInt = randomGenerator.nextInt(2);
+            switch (randomInt) {
+                case 0: return DistancePointAcces.PROCHE;
+                default: return DistancePointAcces.LOIN;
+            }
+        }
+        
+        public int getId() {
+            return id;
+        }
 		
-		// A expliquer.....
+        public void affecterUR(UR ur) {			
+            urRecues.add(ur);
+        }
+                
+        public void clearURrecues() {
+            urRecues.clear();
+        }
+        
+        public DistancePointAcces getDistancePointAcces() {
+            return this.distancePointAcces;
+        }
+        
+        /*public int getSNR() {
+            return moyenBruit / moyenPuissance;
+        }*/
 		
-		public void affecterUR(UR ur) {			
-			urRecues.add(ur);
-			/*if(fifo.size() > 0) {
-				Paquet p = fifo.peek();
-				p.setDebutEnvoie(Simulation.getTemps());
-				cellule.sendPaquet(p);
-			}*/
-		}
-		public void clearUR() {
-			urRecues.clear();
-		}
-		
-		public UR peekUR() {
-			if(urRecues.size() > 0) {
-				UR u = urRecues.get(0);
-				urRecues.remove(0);
-				return u;
-			}
-			return null;
-		}
-
-		
-		
-		/*
-		 * Validation du paquet
-		 * 
-		 * */
-		public void PaquetValide(Paquet p){
-			 
-			int bits = p.getNbBits() - debitCourrant;
-			if(p.getDebutEnvoie()>=p.getFinEnvoie() || p == null || bits<0){
-				throw new IllegalArgumentException("paquet n'est pas valide");
-			}
-			
-		}
-	
-		/*public void envoiePaquet(){
-			
-			int bitsAenvoyer = this.getPacketActuel().getNbBits() - debitCourrant;
-			
-			if(bitsAenvoyer == 0)
-				this.paquetEnvoye();
-
-			this.getPacketActuel().setNbBits(bitsAenvoyer);
-
-		}*/
+        /*public UR peekUR() {
+                if(urRecues.size() > 0) {
+                        UR u = urRecues.get(0);
+                        urRecues.remove(0);
+                        return u;
+                }
+                return null;
+        }*/
+        
+        /*public int getDebitCourrant() {
+                return debitCourrant;
+        }
 
 
-		public int getDebitCourrant() {
-			return debitCourrant;
-		}
+        public void setDebitCourrant(int debitCourrant) {
+                this.debitCourrant = debitCourrant;
+        }*/
 
-
-		public void setDebitCourrant(int debitCourrant) {
-			this.debitCourrant = debitCourrant;
-		}
-
-
-		public int getId() {
-			return id;
-		}
-
-		
-		
-
-		public List<Paquet> getPaquetsAenvoyer() {
-			return paquetAenvoyer;
-		}
-		
-		/*
-		 * Enlever un paquet envoy� du buffer
-		 *  
-		 * */
-				
-		/*public void paquetEnvoye() {
-
-			getPacketActuel().setFinEnvoie(2345);
-			this.paquetAenvoyer.add(getPacketActuel());
-			fifo.removeFirst();
-
-		}*/
-		public int getSNR() {
-			return moyenBruit / moyenPuissance;
-		}
 //		public int getMoyenBruit() {
 //			return moyenBruit;
 //		}
@@ -137,10 +90,7 @@ public class Utilisateur {
 //		public void setMoyenPuissance(int moyenPuissance) {
 //			this.moyenPuissance = moyenPuissance;
 //		}
-		public DistancePointAcces getProcheLoin() {
-			return this.ProcheLoin;
-		}
-
+        
 //		public void setMoyenProche(int moyenProche) {
 //			this.moyenProche = moyenProche;
 //		}

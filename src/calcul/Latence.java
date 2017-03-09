@@ -11,7 +11,7 @@ public class Latence {
 	private static int latence;
 	
 	// Latence pour l'envoie de tous les paquets
-	public static void CalculLatenceGlobal(Cellule cellule){
+	/*public static void CalculLatenceGlobal(Cellule cellule){
 		int nbUtilisateurs=0;
 		int latenceActuelle =0;
 		Utilisateur u= null;
@@ -42,5 +42,5 @@ public class Latence {
 			latenceActuelle = latenceActuelle/ps.size();
 		}	
 		return latenceActuelle;
-	}
+	}*/
 }
