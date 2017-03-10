@@ -61,9 +61,9 @@ public class Utilisateur {
         public int getMkn() {
         	int res =0;
         	if(this.procheLoin==DistancePointAcces.PROCHE)
-        		res= (int)( Math.random()*( 3 ) );
+        		res= (int)( Math.random()*( 5 ) );
         	else
-        		res= (int)( Math.random()*( 7 ) );
+        		res= (int)( Math.random()*( 9 ) );
             
         	return res;
         }
