@@ -14,20 +14,13 @@ public class Utilisateur {
         /*private int debitCourrant;
         private int moyenBruit;
         private int moyenPuissance;*/
-        private int distancePointAcces;
         private DistancePointAcces procheLoin;
         
-        public Utilisateur(int id, Cellule cellule) {
+        public Utilisateur(int id, Cellule cellule, DistancePointAcces distance) {
             this.id = id;
             this.cellule = cellule;
-            this.distancePointAcces = Helper.rndint(1, 15);
-        }
-		
-        public Utilisateur(int id, Cellule cellule, int distancePointAcces) {
-            this.id = id;
-            this.cellule = cellule;
-            this.distancePointAcces = distancePointAcces;
-        }
+            this.procheLoin = distance;
+        }		
 
         private DistancePointAcces rndDistance() {
             Random randomGenerator = new Random();
@@ -48,19 +41,11 @@ public class Utilisateur {
                 
         public void clearURrecues() {
             urRecues.clear();
-        }
+        }        
         
-        public int getDistancePointAcces() {
-            return this.distancePointAcces;
-        }
-        
-        /**
-         * Rapport signal / bruit
-         * @return 
-         */
         public int getMkn() {
         	int res =0;
-        	if(this.procheLoin==DistancePointAcces.PROCHE)
+        	if(this.procheLoin ==DistancePointAcces.PROCHE)
         		res= (int)( Math.random()*( 5 ) );
         	else
         		res= (int)( Math.random()*( 9 ) );
@@ -70,7 +55,7 @@ public class Utilisateur {
         
         @Override
         public String toString() {
-            return "Util" + id + " Cel" + cellule.getNumero() + " Distance : " + distancePointAcces;
+            return "Util" + id + " Cel" + cellule.getNumero() + " Distance : " + procheLoin;
         }
 		
         /*public UR peekUR() {

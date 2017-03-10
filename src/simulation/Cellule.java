@@ -124,12 +124,12 @@ public class Cellule {
                 int i = 0; // TODO: A corriger, sortie vide
                 boolean found = false;
                 while(i < rtn.size() && !found) {
-                    if(rtn.get(i).getDistancePointAcces() < u.getDistancePointAcces()) {
+                   /* if(rtn.get(i).getDistancePointAcces() < u.getDistancePointAcces()) {
                         i++;
                     }
                     else {
                         found = true;
-                    }                    
+                    }  */                  
                 }
                 if(found) {
                     rtn.add(i, u);

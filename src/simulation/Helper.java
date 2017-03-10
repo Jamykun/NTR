@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Helper {
 	public static int rndint(int min, int max) {
-            Random randomGenerator = new Random();
+         Random randomGenerator = new Random();
 	    return randomGenerator.nextInt(max) + min;	
 	}
         
@@ -14,6 +14,8 @@ public class Helper {
 	}
 	
 	public static synchronized void print(String str) {
+		if(Simulation.PRINT) {
             System.out.println(str);
+		}
 	}
 }

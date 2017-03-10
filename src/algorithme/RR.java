@@ -22,9 +22,9 @@ public class RR extends Algorithme {
         UR ur = cellule.getURlibre();        
 
         // Si on est arrivé au bout de la liste des utilisateurs, on retourne au debut de la liste
-        if (this.it == null || !this.it.hasNext()) {
+       // if (this.it == null || !this.it.hasNext()) {
             this.it = this.cellule.getUsers().iterator();
-        }
+       // }
         
         //On recherche un utilisateur qui a un paquet à envoyer
         while(this.it.hasNext() && !paquetAEnvoyer){

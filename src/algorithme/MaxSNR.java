@@ -39,7 +39,7 @@ public class MaxSNR extends Algorithme {
         // Si on a trouvé l'utilisateur le plus proche qui a un paquet à envoyer, on lui alloue une UR
         if(this.utilPlusProche != null){
             this.affecterUR(ur, this.utilPlusProche);  
-            Helper.print(getName() + ": UR" + ur.getId() + " affectée Util" + this.utilPlusProche.getId() + " dist. " + this.utilPlusProche.getDistancePointAcces() + " - " + ur.getNbBits() + " bits");
+           // Helper.print(getName() + ": UR" + ur.getId() + " affectée Util" + this.utilPlusProche.getId() + " dist. " + this.utilPlusProche.getDistancePointAcces() + " - " + ur.getNbBits() + " bits");
         }
 
         return ur;

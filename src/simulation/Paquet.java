@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import simulation.graphique.GraphChargeDelai;
+
 public class Paquet {
         private int id;
 	private int creation;
@@ -25,7 +27,7 @@ public class Paquet {
             this.id = id;
 	}
            
-        public int getId() {
+    public int getId() {
 		return this.id;
 	}
      
@@ -49,11 +51,11 @@ public class Paquet {
 		return creation;
 	}
         
-        public int getDelai() {
-            if(this.debutEnvoie == -1 || this.finEnvoie == -1) {
-                return -1;
-            }
-            return this.finEnvoie - this.debutEnvoie + 1;
+    public int getDelai() {
+        if(this.debutEnvoie == -1 || this.finEnvoie == -1) {
+            return -1;
+        }
+        return this.finEnvoie - this.debutEnvoie + 1;
 	}
 	
         /**
@@ -61,10 +63,12 @@ public class Paquet {
          * @param nbBits Nombre de bits à soustraire
          */
 	public void subNbBits(int nbBits) {
-            this.nbBits -= nbBits;
-            if(this.nbBits < 0) {
-                this.nbBits = 0;
-            }
+        this.nbBits -= nbBits;
+        if(this.nbBits < 0) {
+            this.nbBits = 0;
             this.finEnvoie = Simulation.getTemps();
+            GraphChargeDelai.addDelaiActuel(this.getDelai());            
+        }       
+            
 	}
 }
