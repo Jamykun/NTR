@@ -15,6 +15,7 @@ public class Utilisateur {
         private int moyenBruit;
         private int moyenPuissance;*/
         private int distancePointAcces;
+        private DistancePointAcces procheLoin;
         
         public Utilisateur(int id, Cellule cellule) {
             this.id = id;
@@ -57,8 +58,14 @@ public class Utilisateur {
          * Rapport signal / bruit
          * @return 
          */
-        public float getSNR() {
-            return this.distancePointAcces / Helper.rndFloat((float)0.1, 1);
+        public int getMkn() {
+        	int res =0;
+        	if(this.procheLoin==DistancePointAcces.PROCHE)
+        		res= (int)( Math.random()*( 3 ) );
+        	else
+        		res= (int)( Math.random()*( 7 ) );
+            
+        	return res;
         }
         
         @Override
