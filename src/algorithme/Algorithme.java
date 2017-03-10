@@ -54,8 +54,7 @@ public class Algorithme {
     
     protected void affecterUR(UR ur, Utilisateur util) {	
         ur.setAffectation(util);
-        util.affecterUR(ur);
-        Helper.print(getName() + ": UR" + ur.getId() + " affectée Util" + util.getId() + " - " + ur.getNbBits() + " bits");
+        util.affecterUR(ur);        
     }
     
     public int getTauxUtilisationUR() {

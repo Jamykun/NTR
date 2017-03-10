@@ -14,15 +14,15 @@ public class Utilisateur {
         /*private int debitCourrant;
         private int moyenBruit;
         private int moyenPuissance;*/
-        private DistancePointAcces distancePointAcces;
+        private int distancePointAcces;
         
         public Utilisateur(int id, Cellule cellule) {
             this.id = id;
             this.cellule = cellule;
-            this.distancePointAcces = rndDistance();
+            this.distancePointAcces = Helper.rndint(1, 15);
         }
 		
-        public Utilisateur(int id, Cellule cellule, DistancePointAcces distancePointAcces) {
+        public Utilisateur(int id, Cellule cellule, int distancePointAcces) {
             this.id = id;
             this.cellule = cellule;
             this.distancePointAcces = distancePointAcces;
@@ -49,13 +49,22 @@ public class Utilisateur {
             urRecues.clear();
         }
         
-        public DistancePointAcces getDistancePointAcces() {
+        public int getDistancePointAcces() {
             return this.distancePointAcces;
         }
         
-        /*public int getSNR() {
-            return moyenBruit / moyenPuissance;
-        }*/
+        /**
+         * Rapport signal / bruit
+         * @return 
+         */
+        public float getSNR() {
+            return this.distancePointAcces / Helper.rndFloat((float)0.1, 1);
+        }
+        
+        @Override
+        public String toString() {
+            return "Util" + id + " Cel" + cellule.getNumero() + " Distance : " + distancePointAcces;
+        }
 		
         /*public UR peekUR() {
                 if(urRecues.size() > 0) {

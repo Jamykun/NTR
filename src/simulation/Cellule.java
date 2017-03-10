@@ -30,6 +30,10 @@ public class Cellule {
             this.buffersUsers = new HashMap<>();
             this.iPaquet = 0;
     }
+    
+    public int getNumero() {
+        return this.numero;
+    }
 
     public List<Utilisateur> getUsers() {
             return this.users;
@@ -111,6 +115,32 @@ public class Cellule {
 
     public void setUtilisateur(Utilisateur user) {
             this.users.add(user);
+    }
+    
+    public Utilisateur getUtilProcheAttPaquet(int rang) {
+        ArrayList<Utilisateur> rtn = new ArrayList<>();
+        for(Utilisateur u : this.users) {
+            if(this.getNbBitsAEnvoyer(u) > 0) { 
+                int i = 0; // TODO: A corriger, sortie vide
+                boolean found = false;
+                while(i < rtn.size() && !found) {
+                    if(rtn.get(i).getDistancePointAcces() < u.getDistancePointAcces()) {
+                        i++;
+                    }
+                    else {
+                        found = true;
+                    }                    
+                }
+                if(found) {
+                    rtn.add(i, u);
+                }
+            }
+        }
+        
+        if(rtn.size() > rang) {
+            return rtn.get(rang);
+        }
+        return null;
     }
 
     public void changeTimeslot() {
