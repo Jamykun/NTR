@@ -1,63 +1,84 @@
 package simulation;
+import simulation.helper.Rnd;
 import algorithme.MaxSNR;
 import algorithme.RR;
 import simulation.graphique.GraphChargeDelai;
 
 import java.io.IOException;
+import static java.lang.Math.ceil;
+import simulation.helper.Print;
 
 public class Simulation {
-	public static final int NB_PORTEUSES = 128;
-	public static final int SIMULATION_TIMESLOTS = 70;
-	public static final int NB_TIMESLOT_TRAITEE = 5;
-    private static final int NB_UTILISATEURS = 500;
-    public static final boolean PRINT = false;
-	private static int tick;
-	private static int timeslot;
-	
-	public static void main(String[] args) throws IOException {
-            Cellule cellule0 = new Cellule(0, NB_TIMESLOT_TRAITEE);	
-            RR rr = new RR(cellule0);
-            
-            int nbUtil = 2;
-            /*for(int i = 0; i < NB_UTILISATEURS; i++) {
+    public static final int NB_PORTEUSES = 128;
+    public static final int SIMULATION_TIMESLOTS = 100;
+    public static final int NB_TIMESLOT_TRAITEE = 5;
+    private static final int NB_UTILISATEURS = 5;
+    public static final boolean PRINT = true;
+    private static int tick;
+    private static int timeslot;
+
+    public static void main(String[] args) throws IOException {
+        Cellule cellule0 = new Cellule(0, NB_TIMESLOT_TRAITEE);	
+        RR rr = new RR(cellule0);
+        
+        int nbUtil = 1;
+        
+        for(int i = nbUtil; i < NB_UTILISATEURS; i++) {
+            Utilisateur util = new Utilisateur(i, cellule0);
+            cellule0.addUtilisateur(util);         
+            Print.creationUtil(util);
+        }
+
+        for(int for_tick = 0; for_tick < SIMULATION_TIMESLOTS; for_tick += NB_TIMESLOT_TRAITEE) {
+            Simulation.setTick(for_tick);
+            Print.print("\nTimeslot " + Simulation.tick + " à " + (Simulation.tick+NB_TIMESLOT_TRAITEE));
+                        
+            // Pour faire augmenter le nombre d'utilisateur au fur et à mesure
+            /*for(int i = nbUtil; i < nbUtil * 2; i++) {
                 Utilisateur util = new Utilisateur(i, cellule0);
-                cellule0.setUtilisateur(util);          
-                cellule0.addPaquetsFromInternet(util, Helper.rndint(20000, 30000));
+                cellule0.addUtilisateur(util);         
                 Helper.print(util.toString());
-            }*/
-            
-            //TODO : Date d'arrivée des paquets = debut de la mesure du délai
-            // Faire varier le nombre de paquet recu par internet au cours du temps
-            // Augmenter au fur et a mesure le nombre d'utilisateur * 2
-
-            for(tick = 0; tick < SIMULATION_TIMESLOTS; tick += NB_TIMESLOT_TRAITEE) {
-            	for(int i = 0; i < nbUtil; i++) {
-                    Utilisateur util = new Utilisateur(i, cellule0, DistancePointAcces.PROCHE);
-                    cellule0.setUtilisateur(util);          
-                    cellule0.addPaquetsFromInternet(util, Helper.rndint(20000, 30000));
-                    Helper.print(util.toString());
-                }
-            	nbUtil = nbUtil * 2;
-                
-                Helper.print("\nTimeslot " + tick + " à " + (tick+NB_TIMESLOT_TRAITEE));
-
-                for(timeslot = 0; timeslot < NB_TIMESLOT_TRAITEE; timeslot++) {		
-                    System.out.println("Timeslot " + (tick + timeslot));
-                    rr.traiterTimeslot();
-
-                    Helper.print("\nAppuyer sur une touche pour passer au timeslot " + (getTemps() + 1));
-                    //System.in.read();
-                    rr.changerTimeslot();                           
-                    //Helper.print("Latence " + Latence.CalculLatence(u) + " tick");
-                }
-
-                cellule0.changeTimeslot();	
             }
-            System.out.println("Fin de simulation");
-            GraphChargeDelai.GenerateGraph();
-	}
-	
-	public static int getTemps() {		
-            return tick + timeslot;
-	}
+            nbUtil = nbUtil * 2;*/
+            
+            // Variation des paquets reçus par les utilisateurs
+            for(Utilisateur util : cellule0.getUsers()) {
+                int nbBits = Rnd.rndint(0, 1800);
+                cellule0.addPaquetsFromInternet(util, nbBits);
+                Print.print("Utilisateur " + util.getId() + " > Ajout de " + nbBits + " bits dans son buffer. Buffer : " + cellule0.getNbPaquetAEnvoyer(util) + " paquet(s) / " + cellule0.getNbBitAEnvoyer(util) + " bits");
+            }
+
+            for(int for_timeslot = 0; for_timeslot < NB_TIMESLOT_TRAITEE; for_timeslot++) {
+                Simulation.setTimeslot(for_timeslot);
+                
+                Print.print("\nTimeslot " + (Simulation.tick + Simulation.timeslot));
+                rr.traiterTimeslot();
+
+                Print.print("\nAppuyer sur une touche pour passer au timeslot " + (getTemps() + 1));
+                //System.in.read();
+                rr.changerTimeslot(); 
+                Print.changerTimeslot();
+                //Helper.print("Latence " + Latence.CalculLatence(u) + " tick");
+            }       
+            Simulation.setTimeslot(0);
+
+            cellule0.changeTimeslot();	
+        }
+        System.out.println("\nFin de simulation");
+        System.out.println("Nombre de paquet généré : " + cellule0.getNbTotalPaquetGenere() + " / " + cellule0.getNbTotalBitsGenere() + " bits"/* +" => " + ((float)cellule0.getNbTotalBitsGenere()/(float)cellule0.getNbTotalPaquetGenere()) + "%"*/);
+        System.out.println("Nombre de paquet restant dans les buffers : " + cellule0.getNbTotalPaquetAEnvoyer());
+        GraphChargeDelai.GenerateGraph();
+    }
+
+    public static synchronized int getTemps() {		
+        return Simulation.tick + Simulation.timeslot;
+    }
+    
+    public static synchronized void setTick(int tick) {		
+        Simulation.tick = tick;
+    }
+    
+    public static synchronized void setTimeslot(int timeslot) {		
+        Simulation.timeslot = timeslot;
+    }
 }

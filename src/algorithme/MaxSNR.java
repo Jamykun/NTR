@@ -1,13 +1,11 @@
 package algorithme;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import simulation.Cellule;
-import simulation.Helper;
+import simulation.helper.Rnd;
 import static simulation.Simulation.NB_PORTEUSES;
 import simulation.UR;
 import simulation.Utilisateur;
+import simulation.helper.Print;
 
 public class MaxSNR extends Algorithme { 
     private Utilisateur utilPlusProche = null;
@@ -19,7 +17,7 @@ public class MaxSNR extends Algorithme {
     
     private UR allouerUR() {
         UR ur = cellule.getURlibre();
-        Utilisateur utilActuelProche = this.cellule.getUtilProcheAttPaquet(0);
+        /*Utilisateur utilActuelProche = this.cellule.getUtilProcheAttPaquet(0);
         
         if(this.utilPlusProche == null || utilActuelProche != this.utilPlusProche) {
             this.utilPlusProche = utilActuelProche;
@@ -41,7 +39,7 @@ public class MaxSNR extends Algorithme {
             this.affecterUR(ur, this.utilPlusProche);  
            // Helper.print(getName() + ": UR" + ur.getId() + " affectée Util" + this.utilPlusProche.getId() + " dist. " + this.utilPlusProche.getDistancePointAcces() + " - " + ur.getNbBits() + " bits");
         }
-
+*/
         return ur;
     }
     
@@ -57,11 +55,11 @@ public class MaxSNR extends Algorithme {
         
         // Une fois que toutes les affectations ont été réalisées, ont peut envoyer les UR et ainsi traiter le timeslot courant
         for(UR ur : this.urAEnvoyer) {
-            int nbBitsRestant = cellule.getNbBitsAEnvoyer(ur.getUtilisateur()) - ur.getNbBits();
-            Helper.print(getName() + ": UR" + ur.getId() + " > Util" + ur.getUtilisateur().getId() + " : " + ur.getNbBits() + " bits envoyés. Reste " + ((nbBitsRestant < 0) ? "0" : nbBitsRestant) + " bits");
+            int nbBitsRestant = cellule.getNbBitAEnvoyer(ur.getUtilisateur()) - ur.getNbBits();
+            //Print.print(getName() + ": UR" + ur.getId() + " > Util" + ur.getUtilisateur().getId() + " : " + ur.getNbBits() + " bits envoyés. Reste " + ((nbBitsRestant < 0) ? "0" : nbBitsRestant) + " bits");
  
+            this.calculNbBitsTransmis(ur);  
             this.cellule.envoyerUR(ur);
-            this.calculNbBitsTransmis(ur);           
         }  
         this.offset = 0;
     }    

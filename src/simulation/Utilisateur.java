@@ -1,8 +1,6 @@
 package simulation;
 
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -11,15 +9,18 @@ public class Utilisateur {
         private List<Paquet> paquetAenvoyer = new ArrayList<>();
         private List<UR> urRecues = new ArrayList<>();
         private Cellule cellule;
-        /*private int debitCourrant;
-        private int moyenBruit;
-        private int moyenPuissance;*/
-        private DistancePointAcces procheLoin;
+        private DistancePointAcces distance;
+        
+        public Utilisateur(int id, Cellule cellule) {
+            this.id = id;
+            this.cellule = cellule;
+            this.distance = rndDistance();
+        }
         
         public Utilisateur(int id, Cellule cellule, DistancePointAcces distance) {
             this.id = id;
             this.cellule = cellule;
-            this.procheLoin = distance;
+            this.distance = distance;
         }		
 
         private DistancePointAcces rndDistance() {
@@ -34,6 +35,10 @@ public class Utilisateur {
         public int getId() {
             return id;
         }
+        
+        public DistancePointAcces getDistance() {
+            return this.distance;
+        }
 		
         public void affecterUR(UR ur) {			
             urRecues.add(ur);
@@ -44,18 +49,13 @@ public class Utilisateur {
         }        
         
         public int getMkn() {
-        	int res =0;
-        	if(this.procheLoin ==DistancePointAcces.PROCHE)
-        		res= (int)( Math.random()*( 5 ) );
-        	else
-        		res= (int)( Math.random()*( 9 ) );
-            
-        	return res;
-        }
-        
-        @Override
-        public String toString() {
-            return "Util" + id + " Cel" + cellule.getNumero() + " Distance : " + procheLoin;
+            int res =0;
+            if(this.distance == DistancePointAcces.PROCHE)
+                    res= (int)( Math.random()*( 5 ) );
+            else
+                    res= (int)( Math.random()*( 9 ) );
+
+            return res;
         }
 		
         /*public UR peekUR() {
