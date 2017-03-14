@@ -12,11 +12,11 @@ import simulation.Utilisateur;
 
 public class Print {
     private static LinkedHashMap<Utilisateur, ArrayList<UR>> affectationUR = new LinkedHashMap<>();
-    
+
     public static synchronized void affectationUR(Algorithme algo, Utilisateur util, UR ur) {
         if(Simulation.PRINT) {
             if(ur.getId() == Simulation.NB_PORTEUSES - 1) {
-                System.out.println("Affectations d'UR effectuées par " + algo.getName() + " :");
+                System.out.println("\nAffectations d'UR effectuées par " + algo.getName() + " :");
                 
                 for(Map.Entry<Utilisateur, ArrayList<UR>> set : affectationUR.entrySet()) {                    
                     System.out.print("Utilisateur " + set.getKey().getId() + " > ");

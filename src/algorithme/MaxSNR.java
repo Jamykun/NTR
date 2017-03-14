@@ -8,7 +8,6 @@ import simulation.Utilisateur;
 import simulation.helper.Print;
 
 public class MaxSNR extends Algorithme { 
-    private Utilisateur utilPlusProche = null;
     private int offset = 0;
 
     public MaxSNR(Cellule cellule) {
@@ -18,33 +17,27 @@ public class MaxSNR extends Algorithme {
     private UR allouerUR() {
         UR ur = cellule.getURlibre();
         
-        
-        
-        
-        
-        /*Utilisateur utilActuelProche = this.cellule.getUtilProcheAttPaquet(0);
-        
-        if(this.utilPlusProche == null || utilActuelProche != this.utilPlusProche) {
-            this.utilPlusProche = utilActuelProche;
+        int mknmax = -1;
+        Utilisateur utilMknmax = null;
+        for(Utilisateur util : this.cellule.getUsers()) {
+        	if(this.cellule.getNbPaquetAEnvoyer(util) > 0) {
+        		int mkn = util.getMkn();
+        		if(mknmax == -1 || mkn > mknmax) {
+            		mknmax = mkn;
+            		utilMknmax = util;
+            	}
+        	}        	
         }
         
-        if(this.utilPlusProche != null) {
-            // On verifie que l'utilisateur aura toujours des bits à transmettre
-            if(cellule.getNbBitsAEnvoyer(this.utilPlusProche) - this.getNbBitsATransmettre(this.utilPlusProche) > 0) {               
-                this.addNbBitsATransmettre(this.utilPlusProche, ur.getNbBits());                 
-            }
-            else {
-                this.utilPlusProche = this.cellule.getUtilProcheAttPaquet(1);
-                this.addNbBitsATransmettre(this.utilPlusProche, ur.getNbBits()); 
-            }
+        
+        if(utilMknmax != null) {
+        	this.addNbBitsATransmettre(utilMknmax, ur.getNbBits()); 
+        	this.affecterUR(ur, utilMknmax);  
+        	//TODO: Corriger erreur 100% d'allocation d'UR
+        	//Print.print(utilMknmax.getId() + " ("+ur.getId() + ") : " + mknmax);
+        	Print.affectationUR(this, utilMknmax, ur);
         }
-
-        // Si on a trouvé l'utilisateur le plus proche qui a un paquet à envoyer, on lui alloue une UR
-        if(this.utilPlusProche != null){
-            this.affecterUR(ur, this.utilPlusProche);  
-           // Helper.print(getName() + ": UR" + ur.getId() + " affectée Util" + this.utilPlusProche.getId() + " dist. " + this.utilPlusProche.getDistancePointAcces() + " - " + ur.getNbBits() + " bits");
-        }
-*/
+         
         return ur;
     }
     
