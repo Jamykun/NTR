@@ -10,27 +10,21 @@ public class Utilisateur {
         private List<UR> urRecues = new ArrayList<>();
         private Cellule cellule;
         private DistancePointAcces distance;
-        
-        public Utilisateur(int id, Cellule cellule) {
-            this.id = id;
-            this.cellule = cellule;
-            this.distance = rndDistance();
-        }
-        
+
         public Utilisateur(int id, Cellule cellule, DistancePointAcces distance) {
             this.id = id;
             this.cellule = cellule;
             this.distance = distance;
         }		
 
-        private DistancePointAcces rndDistance() {
+       /* private DistancePointAcces rndDistance() {
             Random randomGenerator = new Random();
             int randomInt = randomGenerator.nextInt(2);
             switch (randomInt) {
                 case 0: return DistancePointAcces.PROCHE;
                 default: return DistancePointAcces.LOIN;
             }
-        }
+        }*/
         
         public int getId() {
             return id;
@@ -53,7 +47,7 @@ public class Utilisateur {
             if(this.distance == DistancePointAcces.PROCHE)
                     res= (int)( Math.random()*( 5 ) );
             else
-                    res= (int)( Math.random()*( 9 ) );
+                    res= (int)( Math.random()*( 6 ) );
 
             return res;
         }

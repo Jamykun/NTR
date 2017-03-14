@@ -12,6 +12,7 @@ public class Algorithme {
     
     // Statistiques
     protected int nbUrAffectee;
+    private int nbBitsEnvoyeTimeslot = 0;
     protected HashMap<Utilisateur, Integer> nbBitsTransmisParUtil;
     protected HashMap<Utilisateur, Integer> nbBitsATransmettreParUtil;
     private int time_dernierReleveDebit;
@@ -33,6 +34,7 @@ public class Algorithme {
     }
     
     protected void addNbBitsATransmettre(Utilisateur util, int nbBits) {
+    	this.nbBitsEnvoyeTimeslot += nbBits;
         int sum = 0;
         if(nbBitsATransmettreParUtil.containsKey(util)) {
             sum = nbBitsATransmettreParUtil.get(util);
@@ -57,8 +59,16 @@ public class Algorithme {
         util.affecterUR(ur);        
     }
     
+    public int getNbURUtiliseeTimeslot() {
+    	return this.urAEnvoyer.size();
+    }
+    
+    public int getNbBitsEnvoyeTimeslot() {
+    	return this.nbBitsEnvoyeTimeslot;
+    }
+    
     public int getTauxUtilisationUR() {
-	return this.urAEnvoyer.size() / NB_PORTEUSES;
+    	return Math.round((this.urAEnvoyer.size() / (float)NB_PORTEUSES) * 100);
     }
     
     /**
@@ -87,6 +97,7 @@ public class Algorithme {
     public void changerTimeslot() {
         this.urAEnvoyer.clear();
         this.nbBitsATransmettreParUtil.clear();
+        this.nbBitsEnvoyeTimeslot = 0;
     }
 
     public String getName() {

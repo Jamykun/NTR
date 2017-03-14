@@ -7,18 +7,18 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class GraphChargeDelai {
-    protected static String GRAPH_NAME = "GraphChargeDelai";
-
+public class GraphTauxUR_NbPaquet {
+    private static final String GRAPH_NAME = "GraphTauxUR_NbPaquet";
     private static HashMap<Integer, Integer> points = new HashMap<>();
 
-    public static void add(int x, int y) {
-        points.put(x, y);
+    public static void add(int tauxur, int nbPaquetTraite) {
+        points.put(tauxur, nbPaquetTraite);
     }
-    
+
     public static void GenerateGraph() throws IOException {
         File f = new File("exports"+ File.separator + GRAPH_NAME + File.separator + GRAPH_NAME +"-"+System.currentTimeMillis()+".csv");
         f.getParentFile().mkdirs(); 
@@ -37,12 +37,12 @@ public class GraphChargeDelai {
     	keys.addAll(points.keySet());
     	
     	for(Integer key : keys) {
-    		//if(key % 15 == 0) {
-	    		bw.write(key+";"+points.get(key));
-	            bw.newLine();
-    		//}
+    		bw.write(key+";"+points.get(key));
+            bw.newLine();
     	}
-    	
+
+ 
+
         bw.close();
     }	
 }

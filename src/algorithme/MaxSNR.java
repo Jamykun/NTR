@@ -17,6 +17,11 @@ public class MaxSNR extends Algorithme {
     
     private UR allouerUR() {
         UR ur = cellule.getURlibre();
+        
+        
+        
+        
+        
         /*Utilisateur utilActuelProche = this.cellule.getUtilProcheAttPaquet(0);
         
         if(this.utilPlusProche == null || utilActuelProche != this.utilPlusProche) {
