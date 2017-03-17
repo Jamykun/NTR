@@ -44,7 +44,7 @@ public class Print {
     
     public static synchronized void paquetEnvoye(UR ur, Paquet paquetActuel, Algorithme algo) {
         if(Simulation.PRINT) {
-            System.out.println("Utilisateur " + ur.getUtilisateur().getId() + " > Paquet " + paquetActuel.getId() +" : Fin d'emission (UR" + paquetActuel.getUrUtilisees() + ") - Taille: "+ paquetActuel.getNbBitOrigine()+" bit(s) - Délai: " + paquetActuel.getDelai() + " tick(s) - Débit : " + algo.getDebit(ur.getUtilisateur()) + " bits/tick");
+            System.out.println("Utilisateur " + ur.getUtilisateur().getId() + " > Paquet " + paquetActuel.getId() +" : Fin d'emission (UR" + paquetActuel.getUrUtilisees() + ") - Délai: " + paquetActuel.getDelai() + " tick(s)");
         }             
     }
      

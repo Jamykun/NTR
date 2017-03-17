@@ -37,7 +37,7 @@ public class MaxSNR extends Algorithme {
         if(utilMknmax != null) {
         	this.addNbBitsATransmettre(utilMknmax, ur.getNbBits()); 
         	this.affecterUR(ur, utilMknmax);          	
-        	Print.print("Affecté à Util " + utilMknmax.getId() + " - UR : "+ur.getId() + " Mkn: " + mknmax);
+        	//Print.print("Affecté à Util " + utilMknmax.getId() + " - UR : "+ur.getId() + " Mkn: " + mknmax);
                    
         	Print.affectationUR(this, utilMknmax, ur);
         }

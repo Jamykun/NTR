@@ -77,10 +77,6 @@ public class Algorithme {
      * @return Debit en bits/tick moyen
      */
     public int getDebit(Utilisateur u){
-        /*if(!nbBitsTransmisParUtil.containsKey(u)) {
-            return 0;
-        }*/
-
         int time = Simulation.getTemps();
         int debit;
         if(time - time_dernierReleveDebit == 0) {

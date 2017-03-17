@@ -19,6 +19,7 @@ public class Cellule {
     private List<UR> ur;
     private List<Utilisateur> users;
     private HashMap<Utilisateur, Deque<Paquet>> buffersUsers;
+    private HashMap<Utilisateur, Integer> bitsEnAttentesUsers;
     private Algorithme algo;
     private int numero;
     private int timeslotOffset = 0;
@@ -36,6 +37,7 @@ public class Cellule {
         this.users = new ArrayList<>();		
         this.timeslotOffset = timeslotOffset;
         this.buffersUsers = new HashMap<>();
+        this.bitsEnAttentesUsers = new HashMap<>();
     }
     
     public int getNumero() {
@@ -90,16 +92,25 @@ public class Cellule {
             if(!buffersUsers.containsKey(util)) {
                 buffersUsers.put(util, new LinkedList<>());
             }
+            if(!bitsEnAttentesUsers.containsKey(util)) {
+            	bitsEnAttentesUsers.put(util, 0);
+            }
             
-            int temp = nbBits;
+            int temp = nbBits + bitsEnAttentesUsers.get(util);
+            bitsEnAttentesUsers.put(util, 0);
             this.nbTotalBitsGenere += nbBits;
             while (temp > 100) {
                 buffersUsers.get(util).add(new Paquet(this.nbTotalPaquet, 100));
                 this.nbTotalPaquet++;
                 temp -= 100;
-            }            
-            buffersUsers.get(util).add(new Paquet(this.nbTotalPaquet, temp));
-            this.nbTotalPaquet++;
+            }   
+            
+            if(!bitsEnAttentesUsers.containsKey(util)) {
+            	bitsEnAttentesUsers.put(util, temp);
+            }
+            else {
+            	bitsEnAttentesUsers.put(util, bitsEnAttentesUsers.get(util) + temp);
+            }        
         }
     }
 
@@ -147,11 +158,6 @@ public class Cellule {
         }
         return bufferUtil.size();
     }
-    
-    public int getNbPaquetTraite() {
-    	return (this.getNbTotalPaquetGenere() - this.getNbTotalPaquetAEnvoyer());
-    }
-
 
     // Paquet demande une UR libre
     public UR getURlibre() {
@@ -177,6 +183,18 @@ public class Cellule {
         for(int i = 0; i < users.size(); i++) {
                 this.users.get(i).clearURrecues();
         }
+    }
+        
+    public int getDebitGlobal(){
+    	return (nbTotalPaquet * 100) / Simulation.getTemps();
+    }
+    
+    public int getDebit(Utilisateur util){
+    	return this.algo.getDebit(util);
+    }
+    
+    public int getNbBitPaquetEnCreation(Utilisateur util) {
+    	return this.bitsEnAttentesUsers.get(util);
     }
 
     public void envoyerUR(UR ur) {
