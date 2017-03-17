@@ -20,21 +20,25 @@ public class MaxSNR extends Algorithme {
         int mknmax = -1;
         Utilisateur utilMknmax = null;
         for(Utilisateur util : this.cellule.getUsers()) {
-        	if(this.cellule.getNbPaquetAEnvoyer(util) > 0) {
-        		int mkn = util.getMkn();
-        		if(mknmax == -1 || mkn > mknmax) {
-            		mknmax = mkn;
-            		utilMknmax = util;
-            	}
-        	}        	
+            if(this.cellule.getNbPaquetAEnvoyer(util) > 0) {
+                if(cellule.getNbBitAEnvoyer(util) - this.getNbBitsATransmettre(util) > 0) {
+                    int mkn = util.getMkn();
+                    //Print.print("Util " + util.getId() + " Mkn: " + mkn);
+                    if(mknmax == -1 || mkn > mknmax) {
+                        mknmax = mkn;
+                        utilMknmax = util;
+                        //Print.print("Meilleur mkn temporaire à Util " + utilMknmax.getId() + " - UR : "+ur.getId() + " Mkn: " + mknmax);
+                    }
+                }
+            }        	
         }
         
         
         if(utilMknmax != null) {
         	this.addNbBitsATransmettre(utilMknmax, ur.getNbBits()); 
-        	this.affecterUR(ur, utilMknmax);  
-        	//TODO: Corriger erreur 100% d'allocation d'UR
-        	//Print.print(utilMknmax.getId() + " ("+ur.getId() + ") : " + mknmax);
+        	this.affecterUR(ur, utilMknmax);          	
+        	Print.print("Affecté à Util " + utilMknmax.getId() + " - UR : "+ur.getId() + " Mkn: " + mknmax);
+                   
         	Print.affectationUR(this, utilMknmax, ur);
         }
          

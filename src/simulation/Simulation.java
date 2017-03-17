@@ -12,9 +12,9 @@ import simulation.helper.Print;
 
 public class Simulation {
     public static final int NB_PORTEUSES = 128;
-    public static final int SIMULATION_TIMESLOTS = 20;
+    public static final int SIMULATION_TIMESLOTS = 100;
     public static final int NB_TIMESLOT_TRAITEE = 5;
-    private static final int NB_UTILISATEURS = 5;
+    private static final int NB_UTILISATEURS = 2;
     private static final int CHARGE_MOYENNE = 50;
     public static final boolean PRINT = true;
     private static int tick;
@@ -22,7 +22,8 @@ public class Simulation {
 
     public static void main(String[] args) throws IOException {
         Cellule cellule0 = new Cellule(0, NB_TIMESLOT_TRAITEE);	
-        MaxSNR ALGO = new MaxSNR(cellule0);
+        //MaxSNR ALGO = new MaxSNR(cellule0);
+        RR ALGO = new RR(cellule0);
         
         int nbUtil = 0;
         
@@ -54,6 +55,7 @@ public class Simulation {
                 // Variation des paquets reçus par les utilisateurs
                 for(Utilisateur util : cellule0.getUsers()) {
                     int nbBits = Helper.rndint(CHARGE_MOYENNE-50, CHARGE_MOYENNE+50);
+                    //int nbBits = 2;
                     cellule0.addPaquetsFromInternet(util, nbBits);                  
                     
                     Print.print("Utilisateur " + util.getId() + " > Ajout de " + nbBits + " bits dans son buffer. Buffer : " + cellule0.getNbPaquetAEnvoyer(util) + " paquet(s) / " + cellule0.getNbBitAEnvoyer(util) + " bits");
