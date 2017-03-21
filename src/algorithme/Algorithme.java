@@ -76,7 +76,7 @@ public class Algorithme {
      * @param u
      * @return Debit en bits/tick moyen
      */
-    public int getDebit(Utilisateur u){
+   /* public int getDebit(Utilisateur u){
         int time = Simulation.getTemps();
         int debit;
         if(time - time_dernierReleveDebit == 0) {
@@ -88,7 +88,7 @@ public class Algorithme {
         }
         nbBitsTransmisParUtil.put(u, 0);
         return debit;
-    }
+    }*/
     
     public void changerTimeslot() {
         this.urAEnvoyer.clear();

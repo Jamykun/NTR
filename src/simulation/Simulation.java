@@ -3,6 +3,7 @@ import simulation.helper.Rnd;
 import algorithme.MaxSNR;
 import algorithme.RR;
 import simulation.graphique.GraphChargeDelai;
+import simulation.graphique.GraphDebitFourni_Temps;
 import simulation.graphique.GraphDebit_NbPaquet;
 import simulation.graphique.GraphDebit_NbPaquet_Utilisateur;
 import simulation.graphique.GraphTauxUR_NbPaquet;
@@ -15,11 +16,11 @@ import simulation.helper.Print;
 
 public class Simulation {
     public static final int NB_PORTEUSES = 128;
-    public static final int SIMULATION_TIMESLOTS = 30;
+    public static final int SIMULATION_TIMESLOTS = 500;
     public static final int NB_TIMESLOT_TRAITEE = 5;
     private static final int NB_UTILISATEURS = 4;
-    private static final int CHARGE_MOYENNE = 90;
-    public static final boolean PRINT = true;
+    private static final int CHARGE_MOYENNE = 25;
+    public static final boolean PRINT = false;
     private static int tick;
     private static int timeslot;
     private static ArrayList<GraphDebit_NbPaquet_Utilisateur> graphsDebitUtilisateurs = new ArrayList<>();
@@ -60,7 +61,7 @@ public class Simulation {
                 
                 // Variation des paquets reçus par les utilisateurs
                 for(Utilisateur util : cellule0.getUsers()) {
-                    int nbBits = Helper.rndint(CHARGE_MOYENNE-50, CHARGE_MOYENNE+50);
+                    int nbBits = Helper.rndint(CHARGE_MOYENNE-(CHARGE_MOYENNE / 4), CHARGE_MOYENNE+(CHARGE_MOYENNE / 4));
                     //int nbBits = 2;
                     cellule0.addPaquetsFromInternet(util, nbBits);                  
                     
@@ -69,14 +70,17 @@ public class Simulation {
                 
                 ALGO.traiterTimeslot();
                 Print.print("Nombre de paquet traité : " + cellule0.getNbTotalPaquetGenere());
-                Print.print("Taux utilisation des UR : " + ALGO.getTauxUtilisationUR() + "%");                
+                Print.print("Taux utilisation des UR : " + ALGO.getTauxUtilisationUR() + "%");   
+                Print.print("Débit généré : " + cellule0.getDebitGenere() + " - Débit fourni " + cellule0.getDebitFourni());
                 
+                GraphDebitFourni_Temps.add(Simulation.getTemps(), cellule0.getDebitFourni());
                 GraphTauxUR_NbPaquet.add(cellule0.getNbTotalPaquetGenere(), ALGO.getTauxUtilisationUR());
                 GraphDebit_NbPaquet.add(cellule0.getNbTotalPaquetGenere(), (cellule0.getNbTotalURutilisee() == 0) ? 0 : (cellule0.getNbTotalBitsEnvoye() / cellule0.getNbTotalURutilisee()));
                 
                 Print.print("\nAppuyer sur une touche pour passer au timeslot " + (getTemps() + 1));
                 //System.in.read();
                 ALGO.changerTimeslot(); 
+                cellule0.changeTimeslot();	
                 Print.changerTimeslot();
                 
 
@@ -90,19 +94,11 @@ public class Simulation {
                 
                 //Helper.print("Latence " + Latence.CalculLatence(u) + " tick");
             }
-            Print.print("Debit global : " +  cellule0.getDebitGlobal());
-            int i = 0;
-            for(Utilisateur util : cellule0.getUsers()) {
-            	int deb = cellule0.getDebit(util);
-            	graphsDebitUtilisateurs.get(i).add(cellule0.getNbTotalPaquetGenere(), deb);
-            	Print.print("Debit util"+util.getId() +" : " + deb);
-            	i++;
-            }
+            Print.print("Debit global : " +  cellule0.getDebitGlobal());;
             
+        	//graphsDebitUtilisateurs.get(i).add(cellule0.getNbTotalPaquetGenere(), deb);
             
-            Simulation.setTimeslot(0);
-
-            cellule0.changeTimeslot();	
+            Simulation.setTimeslot(0);            
         }
         System.out.println("\nFin de simulation");
         System.out.println("Nombre de paquet généré : " + cellule0.getNbTotalPaquetGenere() + " paquets / " + cellule0.getNbTotalBitsGenere() + " bits"/* +" => " + ((float)cellule0.getNbTotalBitsGenere()/(float)cellule0.getNbTotalPaquetGenere()) + "%"*/);
@@ -110,6 +106,7 @@ public class Simulation {
         GraphChargeDelai.GenerateGraph();
         GraphTauxUR_NbPaquet.GenerateGraph();
         GraphDebit_NbPaquet.GenerateGraph();
+        GraphDebitFourni_Temps.GenerateGraph();
         for(int i = 0; i < cellule0.getUsers().size(); i++) {        	
         	graphsDebitUtilisateurs.get(i).GenerateGraph();
         }

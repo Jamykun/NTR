@@ -24,6 +24,8 @@ public class Cellule {
     private int numero;
     private int timeslotOffset = 0;
     private int nbTotalPaquet = 0;
+    private int nbBitsGenereTimeslot = 0;
+    private int nbBitsFourniTimeslot = 0;
     private int nbTotalBitsGenere = 0;
     private int nbTotalBitsEnvoye = 0;
     private int nbTotalURutilisee = 0;
@@ -99,6 +101,7 @@ public class Cellule {
             int temp = nbBits + bitsEnAttentesUsers.get(util);
             bitsEnAttentesUsers.put(util, 0);
             this.nbTotalBitsGenere += nbBits;
+            this.nbBitsGenereTimeslot += nbBits;
             while (temp > 100) {
                 buffersUsers.get(util).add(new Paquet(this.nbTotalPaquet, 100));
                 this.nbTotalPaquet++;
@@ -183,14 +186,24 @@ public class Cellule {
         for(int i = 0; i < users.size(); i++) {
                 this.users.get(i).clearURrecues();
         }
+        this.nbBitsGenereTimeslot = 0;
+        this.nbBitsFourniTimeslot = 0;
     }
         
     public int getDebitGlobal(){
     	return (nbTotalPaquet * 100) / Simulation.getTemps();
     }
     
-    public int getDebit(Utilisateur util){
-    	return this.algo.getDebit(util);
+    public int getDebitGenere(){
+    	//if (Simulation.getTemps()==0 )
+    	return this.nbBitsGenereTimeslot /*/ (Simulation.getTemps()+1)*/;
+    	/*else 
+    		return (this.nbBitsGenereTimeslot * 100) / Simulation.getTemps();*/
+    		
+    }
+    
+    public int getDebitFourni(){
+    	return this.nbTotalBitsEnvoye / (Simulation.getTemps()+1);
     }
     
     public int getNbBitPaquetEnCreation(Utilisateur util) {
@@ -209,21 +222,23 @@ public class Cellule {
             }
             else {
                 if(paquetPrecedent != paquetActuel) {
-                    Print.paquetDebutEnvoi(ur, paquetActuel);
+                    Print.paquetDebutEnvoi(ur, paquetActuel);                    
                 }
                 int nbBitsPaquetActuel = paquetActuel.getNbBitActuel();
 
                 if(nbBitsPaquetActuel < ur.getNbBits()) {
                     paquetActuel.subNbBits(nbBitsPaquetActuel);
                     this.nbTotalBitsEnvoye += nbBitsPaquetActuel;
+                    this.nbBitsFourniTimeslot += nbBitsPaquetActuel;
                     paquetActuel.addUrUtilisee(ur);
                     nbBitsRestantUR -= nbBitsPaquetActuel;
-                    Print.paquetEnvoye(ur, paquetActuel, this.algo);
+                    Print.paquetEnvoye(ur, paquetActuel, this.algo);                    
                     GraphChargeDelai.add(paquetActuel.getId(),paquetActuel.getDelai()); 
                 }
                 else {
                     paquetActuel.subNbBits(nbBitsRestantUR);
                     this.nbTotalBitsEnvoye += nbBitsPaquetActuel;
+                    this.nbBitsFourniTimeslot += nbBitsRestantUR;
                     paquetActuel.addUrUtilisee(ur);
                     nbBitsRestantUR = 0;
                     if(paquetActuel.getNbBitActuel() == 0) {
