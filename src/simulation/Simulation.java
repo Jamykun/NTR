@@ -13,12 +13,14 @@ import simulation.helper.Print;
 import simulation.helper.Rnd;
 
 public class Simulation {
+    public static final String ALGO = "RR";
+    public static final boolean PRINT = false;
+    
     public static final int NB_PORTEUSES = 128;
     public static final int SIMULATION_TIMESLOTS = 500;
     public static final int NB_TIMESLOT_TRAITEE = 5;
     private static final int NB_UTILISATEURS = 4;
     public static final int CHARGE_MOYENNE = 50;
-    public static final boolean PRINT = false;
     private static int tick;
     private static int timeslot;
     private static ArrayList<GraphDebit_NbPaquet_Utilisateur> graphsDebitUtilisateurs = new ArrayList<>();
@@ -26,8 +28,11 @@ public class Simulation {
 
     public static void main(String[] args) throws IOException {
         Cellule cellule0 = new Cellule(0, NB_TIMESLOT_TRAITEE);	
-        algo = new MaxSNR(cellule0);
-        //algo = new RR(cellule0);
+        if(ALGO.toUpperCase().equals("RR")) {
+            algo = new RR(cellule0);
+        } else {
+            algo = new MaxSNR(cellule0);
+        }
         
         int nbUtil = 0;
         
@@ -122,9 +127,5 @@ public class Simulation {
     
     public static synchronized void setTimeslot(int timeslot) {		
         Simulation.timeslot = timeslot;
-    }
-    
-    public static String getAlgoName() {
-        return algo.getName();
     }
 }

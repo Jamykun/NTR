@@ -27,7 +27,7 @@ public class GraphCharge_Delai {
     	keys.addAll(points.keySet());
         
         // Création du fichier et des répertoires
-        File f = new File("exports"+ File.separator + GRAPH_NAME + File.separator + GRAPH_NAME +"-"+Simulation.getAlgoName()+"-"+Simulation.CHARGE_MOYENNE+".csv");
+        File f = new File("exports"+ File.separator + GRAPH_NAME + File.separator + GRAPH_NAME +"-"+Simulation.ALGO+"-"+Simulation.CHARGE_MOYENNE+"-"+System.currentTimeMillis()+".csv");
         f.getParentFile().mkdirs(); 
         f.createNewFile();
         FileOutputStream fos = new FileOutputStream(f);
