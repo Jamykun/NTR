@@ -20,7 +20,7 @@ public class Simulation {
     public static final int SIMULATION_TIMESLOTS = 500;
     public static final int NB_TIMESLOT_TRAITEE = 5;
     private static final int NB_UTILISATEURS = 4;
-    public static final int CHARGE_MOYENNE = 50;
+    public static final int CHARGE_MOYENNE = 72;
     private static int tick;
     private static int timeslot;
     private static ArrayList<GraphDebit_NbPaquet_Utilisateur> graphsDebitUtilisateurs = new ArrayList<>();
@@ -75,12 +75,14 @@ public class Simulation {
                 algo.traiterTimeslot();
                 Print.print("Nombre de paquet traité : " + cellule0.getNbTotalPaquetGenere());
                 Print.print("Taux utilisation des UR : " + algo.getTauxUtilisationUR() + "%");   
-                Print.print("Débit généré : " + cellule0.getDebitGenere() + " - Débit fourni " + cellule0.getDebitFourni());
+                Print.print("Débit généré : " + cellule0.getDebitGenere() + " - Débit fourni " + cellule0.getDebitFourni(false));
                 
-                GraphDebitFourni_Temps.add(Simulation.getTemps(), cellule0.getDebitFourni());
+                if(getTemps() % 50 == 0) {
+                    GraphDebitFourni_Temps.add(Simulation.getTemps(), cellule0.getDebitFourni(true));
+                }
                 GraphTauxUR_NbPaquet.add(cellule0.getNbTotalPaquetGenere(), algo.getTauxUtilisationUR());
                 GraphDebit_NbPaquet.add(cellule0.getNbTotalPaquetGenere(), (cellule0.getNbTotalURutilisee() == 0) ? 0 : (cellule0.getNbTotalBitsEnvoye() / cellule0.getNbTotalURutilisee()));
-                
+
                 //Print.print("\nAppuyer sur une touche pour passer au timeslot " + (getTemps() + 1));
                 //System.in.read();
                 algo.changerTimeslot(); 

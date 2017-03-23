@@ -230,15 +230,19 @@ public class Cellule {
     	return this.nbBitsGenereTimeslot /*/ (Simulation.getTemps()+1)*/;
     	/*else 
     		return (this.nbBitsGenereTimeslot * 100) / Simulation.getTemps();*/
-    		
     }
     
-    public int getDebitFourni(){
-    	return this.nbTotalBitsEnvoye / (Simulation.getTemps()+1);
+    public int getDebitFourni(boolean reset){
+        // TODO : Calculé le débit moyens tout les 50 ticks
+    	return this.nbTotalBitsEnvoye /*/ (Simulation.getTemps()+1)*/;
     }
     
     public int getNbBitPaquetEnCreation(Utilisateur util) {
     	return this.bitsEnAttentesUsers.get(util);
+    }
+    
+    public int getNbBitsParNbUR() {
+        return this.nbTotalBitsEnvoye / this.nbTotalURutilisee;
     }
 
     /**
