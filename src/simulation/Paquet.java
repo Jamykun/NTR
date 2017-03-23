@@ -29,6 +29,9 @@ public class Paquet {
             return this.finEnvoie;
     }
 
+    /**
+     * @return Nombre de bits restant à consommer
+     */
     public int getNbBitActuel() {
             return this.nbBitActuel;
     }
@@ -37,6 +40,9 @@ public class Paquet {
             return this.nbBitOrigine;
     }
 
+    /**
+     * @return Nombre de timeslot sur lequels le paquet s'est envoyé. -1 si le paquet n'est pas encore totalement envoyé à l'utilisateur.
+     */
     public int getDelai() {
         if(this.finEnvoie == -1) {
             return -1;
@@ -58,10 +64,18 @@ public class Paquet {
         } 
     }
     
+    /**
+     * Utiliser pour les statistiques
+     * @param ur 
+     */
     public void addUrUtilisee(UR ur) {
         urUtilisees.add(ur);
     }
     
+    /**
+     * Utiliser pour les statistiques 
+     * @return String Liste des URs utilisées pour envoyer le paquet
+     */
     public String getUrUtilisees() {
         StringBuilder stb = new StringBuilder();
         int i = 0;

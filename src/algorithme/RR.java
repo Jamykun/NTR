@@ -1,10 +1,7 @@
 package algorithme;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import simulation.Cellule;
-import simulation.helper.Rnd;
 import static simulation.Simulation.NB_PORTEUSES;
 import simulation.UR;
 import simulation.Utilisateur;
@@ -17,6 +14,10 @@ public class RR extends Algorithme {
         super(cellule);
     }  
     
+    /**
+     * Alloue une UR au prochain utilisateur qui a un paquet à recevoir
+     * @return UR allouée. null si aucun utilisateur n'a besoin d'une UR
+     */
     private UR allouerUR() {
         Utilisateur util = null;
         boolean paquetAEnvoyer = false;
@@ -31,7 +32,7 @@ public class RR extends Algorithme {
         while(this.it.hasNext() && !paquetAEnvoyer){
             util = this.it.next();
             if(cellule.getNbBitAEnvoyer(util) > 0){
-                // S'il y aura toujours des bits à transmettre
+                // S'il y aura toujours des bits à transmettre à ce moment de l'allocation
                 if(cellule.getNbBitAEnvoyer(util) - this.getNbBitsATransmettre(util) > 0) {
                     paquetAEnvoyer = true;
                     this.addNbBitsATransmettre(util, ur.getNbBits());
@@ -48,6 +49,10 @@ public class RR extends Algorithme {
         return ur;
     }
     
+    /**
+     * On alloue les UR puis on les envoie
+     */
+    @Override
     public void traiterTimeslot() {
         // Affectations
         for(int i = 0; i < NB_PORTEUSES; i++) {

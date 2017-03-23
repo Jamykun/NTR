@@ -6,7 +6,7 @@ import java.util.HashMap;
 import simulation.*;
 import static simulation.Simulation.NB_PORTEUSES;
 
-public class Algorithme {
+public abstract class Algorithme {
     protected ArrayList<UR> urAEnvoyer;
     protected Cellule cellule;
     
@@ -15,7 +15,6 @@ public class Algorithme {
     private int nbBitsEnvoyeTimeslot = 0;
     protected HashMap<Utilisateur, Integer> nbBitsTransmisParUtil;
     protected HashMap<Utilisateur, Integer> nbBitsATransmettreParUtil;
-    private int time_dernierReleveDebit;
     
     public Algorithme(Cellule cellule) {
         this.urAEnvoyer = new ArrayList<>();
@@ -26,6 +25,10 @@ public class Algorithme {
         this.cellule.setAlgorithme(this);
     }
     
+    /**
+     * @param util Utilisateur demandé
+     * @return Nombre de bits à transmettre pour l'utilisateur util pour le timeslot courant
+     */
     protected int getNbBitsATransmettre(Utilisateur util) {
         if(nbBitsATransmettreParUtil.containsKey(util)) {
             return nbBitsATransmettreParUtil.get(util);
@@ -33,6 +36,11 @@ public class Algorithme {
         return 0;
     }
     
+    /**
+     * Ajoute un nombre de bits à transmettre pour l'utilisateur util pour le timeslot courant
+     * @param util Utilisateur désigné
+     * @param nbBits Nombre de bits à ajouter
+     */
     protected void addNbBitsATransmettre(Utilisateur util, int nbBits) {
     	this.nbBitsEnvoyeTimeslot += nbBits;
         int sum = 0;
@@ -54,11 +62,19 @@ public class Algorithme {
         this.nbBitsTransmisParUtil.put(ur.getUtilisateur(), nbBitsPrecTransmis + ur.getNbBits());
     }
     
+    /**
+     * Affecte une ur à un utilisateur
+     * @param ur
+     * @param util 
+     */
     protected void affecterUR(UR ur, Utilisateur util) {	
         ur.setAffectation(util);
         util.affecterUR(ur);        
     }
     
+    /**
+     * @return Nombre d'UR à envoyer dans le timeslot courant
+     */
     public int getNbURUtiliseeTimeslot() {
     	return this.urAEnvoyer.size();
     }
@@ -67,6 +83,9 @@ public class Algorithme {
     	return this.nbBitsEnvoyeTimeslot;
     }
     
+    /**
+     * @return Taux d'utilisation des UR dans le timeslot courant
+     */
     public int getTauxUtilisationUR() {
     	return Math.round((this.urAEnvoyer.size() / (float)NB_PORTEUSES) * 100);
     }
@@ -99,4 +118,9 @@ public class Algorithme {
     public String getName() {
         return this.getClass().getSimpleName();
     }
+
+    /**
+     * Allouer et envoyer les URs
+     */
+    public abstract void traiterTimeslot();
 }

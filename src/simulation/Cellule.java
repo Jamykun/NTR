@@ -2,15 +2,13 @@ package simulation;
 
 import simulation.helper.Rnd;
 import algorithme.Algorithme;
-import static java.lang.Math.ceil;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-import simulation.graphique.GraphChargeDelai;
+import simulation.graphique.GraphCharge_Delai;
 import simulation.helper.Print;
 
 public class Cellule {	
@@ -68,14 +66,17 @@ public class Cellule {
         return copy;
     }
 
-    public List<UR> getUr() {
-            return this.ur;
-    }
+   /* public List<UR> getUrs() {
+        return this.ur;
+    }*/
     
     public void setAlgorithme(Algorithme algo) {
         this.algo = algo;
     }
 
+    /**
+     * Affecte les UR à aucun utilisateur
+     */
     private void createListUR() {		
         for(int i = 0; i < NB_UR; i++) {
                 this.ur.get(i).setAffectation(null);
@@ -89,26 +90,31 @@ public class Cellule {
         }		
     }*/
 
+    /**
+     * Ajoute des paquets à un utilisateur
+     * @param util Utilisateur recevant des paquets
+     * @param nbBits Nombre de bits à ajouter. Des paquets de 100 bits seront créés et le surplus sera conservé pour la création d'un prochain paquet.
+     */
     public void addPaquetsFromInternet(Utilisateur util, int nbBits) {
         if(nbBits > 0) {
-            if(!buffersUsers.containsKey(util)) {
+            if(!buffersUsers.containsKey(util)) { // Si le buffer de l'utilisateur n'était pas créé
                 buffersUsers.put(util, new LinkedList<>());
             }
             if(!bitsEnAttentesUsers.containsKey(util)) {
             	bitsEnAttentesUsers.put(util, 0);
             }
             
-            int temp = nbBits + bitsEnAttentesUsers.get(util);
+            int temp = nbBits + bitsEnAttentesUsers.get(util); // On récupère le surplus de bits précédemment ajouté
             bitsEnAttentesUsers.put(util, 0);
             this.nbTotalBitsGenere += nbBits;
             this.nbBitsGenereTimeslot += nbBits;
-            while (temp > 100) {
+            while (temp > 100) { // On créé des paquets de 100 bits
                 buffersUsers.get(util).add(new Paquet(this.nbTotalPaquet, 100));
                 this.nbTotalPaquet++;
                 temp -= 100;
             }   
             
-            if(!bitsEnAttentesUsers.containsKey(util)) {
+            if(!bitsEnAttentesUsers.containsKey(util)) { // On sauvegarde le nombre de bits restants
             	bitsEnAttentesUsers.put(util, temp);
             }
             else {
@@ -117,6 +123,11 @@ public class Cellule {
         }
     }
 
+    /**
+     * Récupère le paquet à consommer dans le buffer d'un l'utilisateur
+     * @param u Utilisateur choisi
+     * @return Paquet en cours de consommation de l'utilisateur. null si son buffer est vide
+     */
     private Paquet getPaquetActuel(Utilisateur u) {
         // On récupère la file d'attente de l'utilisateur
         Deque<Paquet> bufferUtil = buffersUsers.get(u);
@@ -133,6 +144,10 @@ public class Cellule {
         return bufferUtil.getFirst();
     }
 
+    /**
+     * @param u Utilisateur demandé
+     * @return Nombre de bits total prêt à être envoyé dans le buffer de l'utilisateur
+     */
     public int getNbBitAEnvoyer(Utilisateur u) {
         int sum = 0;
         Deque<Paquet> bufferUtil = buffersUsers.get(u);
@@ -145,6 +160,9 @@ public class Cellule {
         return sum;
     }
     
+    /**
+     * @return Nombre total de paquet à envoyer pour l'ensemble des utilisateurs
+     */
     public int getNbTotalPaquetAEnvoyer() {
         int sum = 0;
         for(Map.Entry<Utilisateur, Deque<Paquet>> item : buffersUsers.entrySet()) {
@@ -153,6 +171,10 @@ public class Cellule {
         return sum;
     }
     
+    /**
+     * @param u Utilisateur demandé
+     * @return Nombre de paquet prêt à être envoyé dans le buffer de l'utilisateur
+     */
     public int getNbPaquetAEnvoyer(Utilisateur u) {
         int sum = 0;
         Deque<Paquet> bufferUtil = buffersUsers.get(u);
@@ -162,7 +184,10 @@ public class Cellule {
         return bufferUtil.size();
     }
 
-    // Paquet demande une UR libre
+    /**
+     * Demander une UR libre
+     * @return L'UR libre. null si toutes les UR sont occupées
+     */
     public UR getURlibre() {
         int i = 0;
         while(i < this.ur.size() && !this.ur.get(i).estLibre()) {
@@ -181,6 +206,9 @@ public class Cellule {
         this.users.add(user);
     }
 
+    /**
+     * Libère les URs et met à 0 les statistiques sur chaque timeslot
+     */
     public void changeTimeslot() {
         createListUR();
         for(int i = 0; i < users.size(); i++) {
@@ -190,6 +218,9 @@ public class Cellule {
         this.nbBitsFourniTimeslot = 0;
     }
         
+    /**
+     * @return Nombre total de bits envoyé depuis le début de la simulation
+     */
     public int getDebitGlobal(){
     	return (nbTotalPaquet * 100) / Simulation.getTemps();
     }
@@ -210,45 +241,48 @@ public class Cellule {
     	return this.bitsEnAttentesUsers.get(util);
     }
 
+    /**
+     * @param ur UR à envoyer
+     */
     public void envoyerUR(UR ur) {
     	this.nbTotalURutilisee++;
         int nbBitsRestantUR = ur.getNbBits();
         Paquet paquetPrecedent = this.getPaquetActuel(ur.getUtilisateur());
 
-        while(nbBitsRestantUR > 0) {
+        while(nbBitsRestantUR > 0) { // Tant que l'UR n'est pas pleinement utilisée
             Paquet paquetActuel = this.getPaquetActuel(ur.getUtilisateur());            
             if(paquetActuel == null) { // S'il n'y a plus de paquet à envoyer, on sort
                 nbBitsRestantUR = 0;
             }
             else {
-                if(paquetPrecedent != paquetActuel) {
+                if(paquetPrecedent != paquetActuel) { // Si on commence l'envoi d'un nouveau paquet
                     Print.paquetDebutEnvoi(ur, paquetActuel);                    
                 }
                 int nbBitsPaquetActuel = paquetActuel.getNbBitActuel();
 
-                if(nbBitsPaquetActuel < ur.getNbBits()) {
-                    paquetActuel.subNbBits(nbBitsPaquetActuel);
+                if(nbBitsPaquetActuel < ur.getNbBits()) { // Si l'UR peut envoyer le paquet actuel entièrement 
+                    paquetActuel.subNbBits(nbBitsPaquetActuel); // On "envoi le paquet" : On retire des bits au paquet
                     this.nbTotalBitsEnvoye += nbBitsPaquetActuel;
                     this.nbBitsFourniTimeslot += nbBitsPaquetActuel;
                     paquetActuel.addUrUtilisee(ur);
                     nbBitsRestantUR -= nbBitsPaquetActuel;
                     Print.paquetEnvoye(ur, paquetActuel, this.algo);                    
-                    GraphChargeDelai.add(paquetActuel.getId(),paquetActuel.getDelai()); 
+                    GraphCharge_Delai.add(paquetActuel.getId(),paquetActuel.getDelai()); 
                 }
-                else {
-                    paquetActuel.subNbBits(nbBitsRestantUR);
+                else { // Si l'UR sera pleinement utilisée
+                    paquetActuel.subNbBits(nbBitsRestantUR); // On "envoi le paquet" : On retire des bits au paquet
                     this.nbTotalBitsEnvoye += nbBitsPaquetActuel;
                     this.nbBitsFourniTimeslot += nbBitsRestantUR;
                     paquetActuel.addUrUtilisee(ur);
                     nbBitsRestantUR = 0;
-                    if(paquetActuel.getNbBitActuel() == 0) {
+                    if(paquetActuel.getNbBitActuel() == 0) { // Si on a consommé entierement un paquet
                         Print.paquetEnvoye(ur, paquetActuel, this.algo);
-                        GraphChargeDelai.add(paquetActuel.getId(), paquetActuel.getDelai()); 
+                        GraphCharge_Delai.add(paquetActuel.getId(), paquetActuel.getDelai()); 
                     }
                 }  
             }      
         }
 
-        ur.setAffectation(null);
+        ur.setAffectation(null); // On libère l'UR
     }
 }

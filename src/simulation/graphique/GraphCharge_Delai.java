@@ -11,14 +11,14 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import simulation.Simulation;
 
-public class GraphDebit_NbPaquet {
-    private static final String GRAPH_NAME = "GraphDebit_NbPaquet";
+public class GraphCharge_Delai {
     private static HashMap<Integer, Integer> points = new HashMap<>();
-
-    public static void add(int nbPaquet, int debit) {
-        points.put(nbPaquet, debit);
+    private static final String GRAPH_NAME = "GraphCharge_Delai";
+    
+    public static void add(int x, int y) {
+        points.put(x, y);
     }
-
+    
     public static void GenerateGraph() throws IOException {
         // Tri par x
         Comparator<Integer> comparator;

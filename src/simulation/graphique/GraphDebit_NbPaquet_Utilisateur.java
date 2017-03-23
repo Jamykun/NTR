@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import simulation.Simulation;
 
 import simulation.Utilisateur;
 
@@ -27,28 +28,23 @@ public class GraphDebit_NbPaquet_Utilisateur {
     }
 
     public void GenerateGraph() throws IOException {
-        File f = new File("exports"+ File.separator + GRAPH_NAME + File.separator + GRAPH_NAME +"-"+util.getId()+"-"+System.currentTimeMillis()+".csv");
+        // Tri par x
+        Comparator<Integer> comparator;
+        comparator = (Integer o1, Integer o2) -> o1 - o2;    	
+    	SortedSet<Integer> keys = new TreeSet<>(comparator);
+    	keys.addAll(points.keySet());
+        
+        // Création du fichier et des répertoires
+        File f = new File("exports"+ File.separator + GRAPH_NAME + File.separator + GRAPH_NAME +"-"+Simulation.getAlgoName()+"-"+Simulation.CHARGE_MOYENNE+".csv");
         f.getParentFile().mkdirs(); 
         f.createNewFile();
         FileOutputStream fos = new FileOutputStream(f);
-
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
         
-        Comparator<Integer> comparator = new Comparator<Integer>() {
-    	  public int compare(Integer o1, Integer o2) {
-    		  return o1 - o2;
-    	  }
-    	};
-    	
-    	SortedSet<Integer> keys = new TreeSet<Integer>(comparator);
-    	keys.addAll(points.keySet());
-    	
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
     	for(Integer key : keys) {
-    		bw.write(key+";"+points.get(key));
+            bw.write(key+";"+points.get(key));
             bw.newLine();
     	}
-
- 
 
         bw.close();
     }	

@@ -2,29 +2,18 @@ package simulation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Utilisateur {	
-        private int id;
-        private List<Paquet> paquetAenvoyer = new ArrayList<>();
+        private final int id;
         private List<UR> urRecues = new ArrayList<>();
-        private Cellule cellule;
-        private DistancePointAcces distance;
+        private final Cellule cellule;
+        private final DistancePointAcces distance;
 
         public Utilisateur(int id, Cellule cellule, DistancePointAcces distance) {
             this.id = id;
             this.cellule = cellule;
             this.distance = distance;
         }		
-
-       /* private DistancePointAcces rndDistance() {
-            Random randomGenerator = new Random();
-            int randomInt = randomGenerator.nextInt(2);
-            switch (randomInt) {
-                case 0: return DistancePointAcces.PROCHE;
-                default: return DistancePointAcces.LOIN;
-            }
-        }*/
         
         public int getId() {
             return id;
@@ -43,51 +32,13 @@ public class Utilisateur {
         }        
         
         public int getMkn() {
-            int res =0;
-            if(this.distance == DistancePointAcces.PROCHE)
-                    res= (int)( Math.random()*( 5 ) );
-            else
-                    res= (int)( Math.random()*( 6 ) );
-
+            int res = 0;
+            if(this.distance == DistancePointAcces.PROCHE) {
+                res = (int)(Math.random()*(5));
+            }
+            else {
+                res = (int)(Math.random()*(6));
+            }
             return res;
         }
-		
-        /*public UR peekUR() {
-                if(urRecues.size() > 0) {
-                        UR u = urRecues.get(0);
-                        urRecues.remove(0);
-                        return u;
-                }
-                return null;
-        }*/
-        
-        /*public int getDebitCourrant() {
-                return debitCourrant;
-        }
-
-
-        public void setDebitCourrant(int debitCourrant) {
-                this.debitCourrant = debitCourrant;
-        }*/
-
-//		public int getMoyenBruit() {
-//			return moyenBruit;
-//		}
-//
-//		public void setMoyenBruit(int moyenBruit) {
-//			this.moyenBruit = moyenBruit;
-//		}
-//
-//		public int getMoyenPuissance() {
-//			return moyenPuissance;
-//		}
-//
-//		public void setMoyenPuissance(int moyenPuissance) {
-//			this.moyenPuissance = moyenPuissance;
-//		}
-        
-//		public void setMoyenProche(int moyenProche) {
-//			this.moyenProche = moyenProche;
-//		}
-
 }
