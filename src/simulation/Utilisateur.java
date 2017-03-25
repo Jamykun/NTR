@@ -3,6 +3,8 @@ package simulation;
 import java.util.ArrayList;
 import java.util.List;
 
+import simulation.helper.Rnd;
+
 public class Utilisateur {	
         private final int id;
         private List<UR> urRecues = new ArrayList<>();
@@ -32,13 +34,11 @@ public class Utilisateur {
         }        
         
         public int getMkn() {
-            int res = 0;
             if(this.distance == DistancePointAcces.PROCHE) {
-                res = (int)(Math.random()*(5));
+            	return Rnd.rndint(0, 4);
             }
             else {
-                res = (int)(Math.random()*(6));
+            	return Rnd.rndint(0, 6);
             }
-            return res;
         }
 }

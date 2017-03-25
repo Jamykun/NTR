@@ -1,4 +1,4 @@
-package graphique;
+package simulation.graphique;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -68,7 +68,7 @@ public class MoyenneGraphs {
 				}
 				System.out.println("premier___________________________"
 						+ premier);
-				System.out.println("deuxième______________" + deuxieme);
+				System.out.println("deuxiï¿½me______________" + deuxieme);
 				if (premier != 0)
 					moyenneDebit =  ((deuxieme) / premier);
 				auxOut.add(moyenneDebit);
@@ -85,8 +85,7 @@ public class MoyenneGraphs {
 
 	public static void main(String[] args) {
 
-		MoyenneGraphs
-				.lireFichier("src/exports/GraphChargeDelai/GraphChargeDelai.csv");
+		//MoyenneGraphs.lireFichier("src/exports/GraphChargeDelai/GraphChargeDelai.csv");
 		// String number = "10";
 		// int result = Integer.parseInt(number);
 		// System.out.println(result);

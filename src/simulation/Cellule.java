@@ -26,6 +26,7 @@ public class Cellule {
     private int nbBitsFourniTimeslot = 0;
     private int nbTotalBitsGenere = 0;
     private int nbTotalBitsEnvoye = 0;
+    private int nbBitsEnvoye50ticks = 0;
     private int nbTotalURutilisee = 0;
     
     public Cellule(int numero, int timeslotOffset) {	
@@ -232,9 +233,10 @@ public class Cellule {
     		return (this.nbBitsGenereTimeslot * 100) / Simulation.getTemps();*/
     }
     
-    public int getDebitFourni(boolean reset){
-        // TODO : Calculé le débit moyens tout les 50 ticks
-    	return this.nbTotalBitsEnvoye /*/ (Simulation.getTemps()+1)*/;
+    public int getDebitFourni(){
+    	int rtn = this.nbBitsEnvoye50ticks / 50;
+    	this.nbBitsEnvoye50ticks = 0;
+    	return rtn;
     }
     
     public int getNbBitPaquetEnCreation(Utilisateur util) {
@@ -267,6 +269,7 @@ public class Cellule {
                 if(nbBitsPaquetActuel < ur.getNbBits()) { // Si l'UR peut envoyer le paquet actuel entièrement 
                     paquetActuel.subNbBits(nbBitsPaquetActuel); // On "envoi le paquet" : On retire des bits au paquet
                     this.nbTotalBitsEnvoye += nbBitsPaquetActuel;
+                    this.nbBitsEnvoye50ticks += nbBitsPaquetActuel;
                     this.nbBitsFourniTimeslot += nbBitsPaquetActuel;
                     paquetActuel.addUrUtilisee(ur);
                     nbBitsRestantUR -= nbBitsPaquetActuel;
@@ -276,6 +279,7 @@ public class Cellule {
                 else { // Si l'UR sera pleinement utilisée
                     paquetActuel.subNbBits(nbBitsRestantUR); // On "envoi le paquet" : On retire des bits au paquet
                     this.nbTotalBitsEnvoye += nbBitsPaquetActuel;
+                    this.nbBitsEnvoye50ticks += nbBitsPaquetActuel;
                     this.nbBitsFourniTimeslot += nbBitsRestantUR;
                     paquetActuel.addUrUtilisee(ur);
                     nbBitsRestantUR = 0;
