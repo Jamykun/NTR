@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import simulation.Simulation;
+import static simulation.Simulation.ALGO;
+import static simulation.Simulation.NB_UTILISATEURS;
 
 public class GraphDebitCharge {    
     public static double getGraphMeanLastValues(String file) {
@@ -27,7 +29,7 @@ public class GraphDebitCharge {
             
             //Moyenne des derniers débit du fichier
             int sum = 0;
-            int i = lines.size() - 10;
+            int i = lines.size() - 100;
             if(i < 0) {
                 i = 0;
             }
@@ -37,6 +39,10 @@ public class GraphDebitCharge {
                 sum += Integer.parseInt(parts[1]);	
             }
             out = (sum / nbElem);
+            
+            // Valeur finale
+            /*String[] parts = lines.get(lines.size()-1).split(";");
+            out = Integer.parseInt(parts[1]);*/
         } 
         catch (IOException e) {
                 System.out.println("Error en lectura del fichero: " + file);
@@ -72,24 +78,34 @@ public class GraphDebitCharge {
     }    
 
     public static void main(String[] args) throws IOException {
-        BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Nom du graphe à fusionner [GraphDebitFourni_Temps] :");        
-        String graphName = buffer.readLine();
-        if(graphName.equals("")) {
-            graphName = "GraphDebitFourni_Temps";
-        }
-        System.out.println("Graphique : " + graphName+"\n");
+        String graphName;
+        String algoName;
         
-        System.out.println("Algorithme du graphe à fusionner ["+Simulation.ALGO+"] :");  
-        String algoName = buffer.readLine();
-        if(algoName.toLowerCase().equals("maxsnr")) {
-            algoName = "MaxSNR";
-        } else if(algoName.toLowerCase().equals("rr")) {
-            algoName = "RR";
-        } else if(algoName.equals("")) {
-            algoName = Simulation.ALGO;
+        if(args.length == 2) {
+            graphName = args[0];
+            algoName = args[1];
         }
-        System.out.println("Algo : " + algoName+"\n");
+        else {
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Nom du graphe à fusionner [GraphDebitFourni_Temps] :");        
+            graphName = buffer.readLine();
+            if(graphName.equals("")) {
+                graphName = "GraphDebitFourni_Temps";
+            }
+
+            System.out.println("Algorithme du graphe à fusionner ["+Simulation.ALGO+"] :");  
+            algoName = buffer.readLine();
+            if(algoName.toLowerCase().equals("maxsnr")) {
+                algoName = "MaxSNR";
+            } else if(algoName.toLowerCase().equals("rr")) {
+                algoName = "RR";
+            } else if(algoName.equals("")) {
+                algoName = Simulation.ALGO;
+            }
+            
+        }
+        System.out.println("Graphique : " + graphName);
+        System.out.println("Algo : " + algoName);
         
         ArrayList<String> files = listFiles("./exports/"+graphName+"/", algoName);
         if(files.isEmpty()) {

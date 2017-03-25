@@ -35,7 +35,7 @@ public class GraphDebit_NbPaquet_Utilisateur {
     	keys.addAll(points.keySet());
         
         // Création du fichier et des répertoires
-        File f = new File("exports"+ File.separator + GRAPH_NAME + File.separator + GRAPH_NAME +"-"+Simulation.ALGO+"-"+Simulation.CHARGE_MOYENNE+"-"+System.currentTimeMillis()+".csv");
+        File f = new File("exports"+ File.separator + GRAPH_NAME + File.separator + GRAPH_NAME +"-"+Simulation.ALGO+"-"+Simulation.DEBIT_GENERE_MOYEN+"-"+System.currentTimeMillis()+".csv");
         f.getParentFile().mkdirs(); 
         f.createNewFile();
         FileOutputStream fos = new FileOutputStream(f);

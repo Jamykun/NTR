@@ -70,7 +70,7 @@ public class GraphFusion {
         for (final File fileEntry : folder.listFiles()) {
             if (!fileEntry.isDirectory()) {
                 GraphInfo gi = getGraphInfo(fileEntry.getName());                
-                if(!fileEntry.getPath().toLowerCase().contains("merged") && !fileEntry.getPath().toLowerCase().contains("bycharge") && gi.AlgoName.toLowerCase().equals(algo.toLowerCase()) && gi.ChargeValue.toLowerCase().equals(charge.toLowerCase())) {
+                if(!fileEntry.getPath().toLowerCase().contains("merged") && !fileEntry.getPath().toLowerCase().contains("bycharge") && gi.AlgoName.toLowerCase().equals(algo.toLowerCase()) /*&& gi.ChargeValue.toLowerCase().equals(charge.toLowerCase())*/) {
                     files.add(fileEntry.getPath());
                 }
             }
@@ -100,10 +100,10 @@ public class GraphFusion {
         }
         System.out.println("Algo : " + algoName+"\n");
         
-        System.out.println("Charge ["+Simulation.CHARGE_MOYENNE+"] :");  
+        System.out.println("Charge ["+Simulation.DEBIT_GENERE_MOYEN+"] :");  
         String charge = buffer.readLine();
         if(charge.equals("")) {
-            charge = String.valueOf(Simulation.CHARGE_MOYENNE);
+            charge = String.valueOf(Simulation.DEBIT_GENERE_MOYEN);
         }
         System.out.println("Charge : " + charge+"\n");
         
