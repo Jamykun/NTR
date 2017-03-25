@@ -19,7 +19,7 @@ import simulation.Simulation;
 import static simulation.Simulation.ALGO;
 import static simulation.Simulation.NB_UTILISATEURS;
 
-public class GraphDebitCharge {    
+public class GraphMoyenneValeursFinales {    
     public static double getGraphMeanLastValues(String file) {
         double out = 0;
         List<String> lines = new ArrayList<>();
@@ -69,7 +69,7 @@ public class GraphDebitCharge {
             if (!fileEntry.isDirectory()) {
                 GraphInfo gi = getGraphInfo(fileEntry.getName());         
                 
-                if(!fileEntry.getPath().toLowerCase().contains("merged") && !fileEntry.getPath().toLowerCase().contains("bycharge") && gi.AlgoName.toLowerCase().equals(algo.toLowerCase())) {
+                if(!fileEntry.getPath().toLowerCase().contains("merged") && !fileEntry.getPath().toLowerCase().contains("moyennevaleursfinales") && gi.AlgoName.toLowerCase().equals(algo.toLowerCase())) {
                     files.add(fileEntry.getPath());
                 }
             }
@@ -121,7 +121,7 @@ public class GraphDebitCharge {
             mergedGraph.put(Integer.valueOf(charge), mean);
         }
         
-        GenerateGraph(mergedGraph, "exports/"+graphName+"/"+graphName+"-"+algoName+"-ByCharge.csv");
+        GenerateGraph(mergedGraph, "exports/"+graphName+"/"+graphName+"-"+algoName+"-MoyenneValeursFinales.csv");
 
         System.out.println(files.size() + " graphique(s) traité(s)");
     }

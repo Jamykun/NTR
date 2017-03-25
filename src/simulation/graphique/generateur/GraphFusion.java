@@ -70,7 +70,7 @@ public class GraphFusion {
         for (final File fileEntry : folder.listFiles()) {
             if (!fileEntry.isDirectory()) {
                 GraphInfo gi = getGraphInfo(fileEntry.getName());                
-                if(!fileEntry.getPath().toLowerCase().contains("merged") && !fileEntry.getPath().toLowerCase().contains("bycharge") && gi.AlgoName.toLowerCase().equals(algo.toLowerCase()) /*&& gi.ChargeValue.toLowerCase().equals(charge.toLowerCase())*/) {
+                if(!fileEntry.getPath().toLowerCase().contains("merged") && !fileEntry.getPath().toLowerCase().contains("moyennevaleursfinales") && gi.AlgoName.toLowerCase().equals(algo.toLowerCase()) && gi.ChargeValue.toLowerCase().equals(charge.toLowerCase())) {
                     files.add(fileEntry.getPath());
                 }
             }

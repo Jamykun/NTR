@@ -27,18 +27,20 @@ public class Simulation {
     private static Algorithme algo;
 
     public static void main(String[] args) throws IOException {
+        // Choix des options de la simulation
         if(args.length == 2) {
             NB_UTILISATEURS = Integer.valueOf(args[0]);
             ALGO = args[1];
         }
         
-        Cellule cellule0 = new Cellule(0, NB_TIMESLOT_TRAITEE);	
+        Cellule cellule0 = new Cellule(0);	
         if(ALGO.toUpperCase().equals("RR")) {
             algo = new RR(cellule0);
         } else {
             algo = new MaxSNR(cellule0);
         }
         
+        // Création des utilisateurs. Autant d'utilisateur proche que loin
         DistancePointAcces dist = DistancePointAcces.PROCHE;
         for(int i = 0; i < NB_UTILISATEURS; i++) {
             Utilisateur util = new Utilisateur(i, cellule0, dist);
@@ -59,25 +61,28 @@ public class Simulation {
                 Simulation.setTimeslot(for_timeslot);                
                 Print.print("\nTimeslot " + (Simulation.tick + Simulation.timeslot));
                 
+                // Génération d'un débit aléatoire
+                // A interval régulier, on change la valeur du débit moyen toujours dans un interval autour de DEBIT_GENERE_MOYEN
+                // afin d'obtenir un débit qui varie de façon vraiment aléatoire
                 intervalMAJdebit--;
                 if(intervalMAJdebit == -1) {
-                    intervalMAJdebit = Rnd.rndint(4,15);
+                    intervalMAJdebit = Rnd.rndint(50,1000);
                     nbBitsInterval = Rnd.rndint(DEBIT_GENERE_MOYEN-(DEBIT_GENERE_MOYEN / 2), DEBIT_GENERE_MOYEN+(DEBIT_GENERE_MOYEN / 2));
                 }                 
                 int nbBits = Rnd.rndint(nbBitsInterval-(nbBitsInterval / 4), nbBitsInterval+(nbBitsInterval / 4));
-                
-                // Variation des paquets reçus par les utilisateurs
+                               
                 for(Utilisateur util : cellule0.getUsers()) {
-                    cellule0.addPaquetsFromInternet(util, nbBits);                  
-                    
+                    cellule0.addPaquetsFromInternet(util, nbBits);
                     Print.print("Utilisateur " + util.getId() + " > Ajout de " + nbBits + " bits dans son buffer. Buffer : " + cellule0.getNbPaquetAEnvoyer(util) + " paquet(s) / Paquet en création : " + cellule0.getNbBitPaquetEnCreation(util) + " bits");
                 }                
                 
+                // On traite le timeslot
                 algo.traiterTimeslot();
                 Print.print("Nombre de paquet traité : " + cellule0.getNbTotalPaquetGenere());
                 Print.print("Taux utilisation des UR : " + algo.getTauxUtilisationUR() + "%");   
                 Print.print("Débit généré : " + cellule0.getDebitGenere());
                 
+                // Mémorisation des valeurs pour les graphiques
                 if(getTemps() % 50 == 0) {
                     GraphDebitFourni_Temps.add(Simulation.getTemps(), cellule0.getDebitFourni());
                 }

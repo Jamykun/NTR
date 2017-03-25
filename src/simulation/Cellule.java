@@ -19,8 +19,7 @@ public class Cellule {
     private HashMap<Utilisateur, Deque<Paquet>> buffersUsers;
     private HashMap<Utilisateur, Integer> bitsEnAttentesUsers;
     private Algorithme algo;
-    private int numero;
-    private int timeslotOffset = 0;
+    private int numero;   
     private int nbTotalPaquet = 0;
     private int nbBitsGenereTimeslot = 0;
     private int nbBitsFourniTimeslot = 0;
@@ -29,14 +28,13 @@ public class Cellule {
     private int nbBitsEnvoye50ticks = 0;
     private int nbTotalURutilisee = 0;
     
-    public Cellule(int numero, int timeslotOffset) {	
+    public Cellule(int numero) {	
         this.numero = numero;
         this.ur = new ArrayList<>();
         for(int i = 0; i < NB_UR; i++) {
                 this.ur.add(new UR(i, this));
         }
         this.users = new ArrayList<>();		
-        this.timeslotOffset = timeslotOffset;
         this.buffersUsers = new HashMap<>();
         this.bitsEnAttentesUsers = new HashMap<>();
     }
