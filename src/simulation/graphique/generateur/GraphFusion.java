@@ -64,13 +64,13 @@ public class GraphFusion {
         return gi;
     } 
     
-    private static ArrayList<String> listFiles(String path, String algo, String charge) {
+    private static ArrayList<String> listFiles(String path, String algo/*, String charge*/) {
         File folder = new File(path);
         ArrayList<String> files = new ArrayList<>();
         for (final File fileEntry : folder.listFiles()) {
             if (!fileEntry.isDirectory()) {
                 GraphInfo gi = getGraphInfo(fileEntry.getName());                
-                if(!fileEntry.getPath().toLowerCase().contains("merged") && !fileEntry.getPath().toLowerCase().contains("moyennevaleursfinales") && gi.AlgoName.toLowerCase().equals(algo.toLowerCase()) && gi.ChargeValue.toLowerCase().equals(charge.toLowerCase())) {
+                if(/*!fileEntry.getPath().toLowerCase().contains("merged") &&*/ !fileEntry.getPath().toLowerCase().contains("moyennevaleursfinales") && gi.AlgoName.toLowerCase().equals(algo.toLowerCase()) /*&& gi.ChargeValue.toLowerCase().equals(charge.toLowerCase())*/) {
                     files.add(fileEntry.getPath());
                 }
             }
@@ -81,33 +81,42 @@ public class GraphFusion {
     
 
     public static void main(String[] args) throws IOException {
-        BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Nom du graphe à fusionner [GraphCharge_Delai] :");        
-        String graphName = buffer.readLine();
-        if(graphName.equals("")) {
-            graphName = "GraphCharge_Delai";
+    	String algoName;
+    	String graphName;
+
+    	if(args.length == 2) {
+            graphName = args[0];
+            algoName = args[1];
         }
-        System.out.println("Graphique : " + graphName+"\n");
-        
-        System.out.println("Algorithme du graphe à fusionner ["+Simulation.ALGO+"] :");  
-        String algoName = buffer.readLine();
-        if(algoName.toLowerCase().equals("maxsnr")) {
-            algoName = "MaxSNR";
-        } else if(algoName.toLowerCase().equals("rr")) {
-            algoName = "RR";
-        } else if(algoName.equals("")) {
-            algoName = Simulation.ALGO;
+        else {
+	        BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
+	        System.out.println("Nom du graphe à fusionner [GraphCharge_Delai] :");        
+	        graphName = buffer.readLine();
+	        if(graphName.equals("")) {
+	            graphName = "GraphCharge_Delai";
+	        }
+	        System.out.println("Graphique : " + graphName+"\n");
+	        
+	        System.out.println("Algorithme du graphe à fusionner ["+Simulation.ALGO+"] :");  
+	        algoName = buffer.readLine();
+	        if(algoName.toLowerCase().equals("maxsnr")) {
+	            algoName = "MaxSNR";
+	        } else if(algoName.toLowerCase().equals("rr")) {
+	            algoName = "RR";
+	        } else if(algoName.equals("")) {
+	            algoName = Simulation.ALGO;
+	        }
+	        System.out.println("Algo : " + algoName+"\n");
+	        
+	        /*System.out.println("Charge ["+Simulation.DEBIT_GENERE_MOYEN+"] :");  
+	        String charge = buffer.readLine();
+	        if(charge.equals("")) {
+	            charge = String.valueOf(Simulation.DEBIT_GENERE_MOYEN);
+	        }
+	        System.out.println("Charge : " + charge+"\n");*/
         }
-        System.out.println("Algo : " + algoName+"\n");
         
-        System.out.println("Charge ["+Simulation.DEBIT_GENERE_MOYEN+"] :");  
-        String charge = buffer.readLine();
-        if(charge.equals("")) {
-            charge = String.valueOf(Simulation.DEBIT_GENERE_MOYEN);
-        }
-        System.out.println("Charge : " + charge+"\n");
-        
-        ArrayList<String> files = listFiles("./exports/"+graphName+"/", algoName, charge);
+        ArrayList<String> files = listFiles("./exports/"+graphName+"/", algoName/*, charge*/);
         if(files.isEmpty()) {
             System.out.println("Aucun graphique à traiter");
             System.exit(0);
@@ -143,7 +152,7 @@ public class GraphFusion {
             }
         }
         
-        GenerateGraph(mergedGraph, "exports/"+graphName+"/"+graphName+"-"+algoName+"-"+charge+"-merged.csv");
+        GenerateGraph(mergedGraph, "exports/"+graphName+"/"+graphName+"-"+algoName+"-"+System.currentTimeMillis()+"-merged.csv");
 
         System.out.println(files.size() + " graphique(s) traité(s)");
     }

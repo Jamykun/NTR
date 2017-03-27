@@ -6,6 +6,7 @@ import simulation.graphique.GraphCharge_Delai;
 import simulation.graphique.GraphDebitFourni_Temps;
 import simulation.graphique.GraphDebit_NbPaquet;
 import simulation.graphique.GraphDebit_NbPaquet_Utilisateur;
+import simulation.graphique.Graph_BitsUR_Temps;
 import simulation.graphique.Graph_Temps_TauxUR;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class Simulation {
     public static final int NB_PORTEUSES = 128;
     public static final int SIMULATION_TIMESLOTS = 10000;
     public static final int NB_TIMESLOT_TRAITEE = 5;
-    public static int NB_UTILISATEURS = 10;
+    public static int NB_UTILISATEURS = 5;
     public static final int DEBIT_GENERE_MOYEN = 40;
     private static int tick;
     private static int timeslot;
@@ -78,14 +79,16 @@ public class Simulation {
                 
                 // On traite le timeslot
                 algo.traiterTimeslot();
+                
                 Print.print("Nombre de paquet traité : " + cellule0.getNbTotalPaquetGenere());
                 Print.print("Taux utilisation des UR : " + algo.getTauxUtilisationUR() + "%");   
                 Print.print("Débit généré : " + cellule0.getDebitGenere());
                 
+                
                 // Mémorisation des valeurs pour les graphiques
                 if(getTemps() % 50 == 0) {
                     GraphDebitFourni_Temps.add(Simulation.getTemps(), cellule0.getDebitFourni());
-                }
+                }                
                 Graph_Temps_TauxUR.add(getTemps(), algo.getTauxUtilisationUR());
                 GraphDebit_NbPaquet.add(cellule0.getNbTotalPaquetGenere(), (cellule0.getNbTotalURutilisee() == 0) ? 0 : (cellule0.getNbTotalBitsEnvoye() / cellule0.getNbTotalURutilisee()));
 
@@ -93,7 +96,7 @@ public class Simulation {
                 cellule0.changeTimeslot();	
                 Print.changerTimeslot();
             }
-            Print.print("Debit global : " +  cellule0.getDebitGlobal());;
+            Print.print("Debit global : " +  cellule0.getDebitGlobal());
             //graphsDebitUtilisateurs.get(i).add(cellule0.getNbTotalPaquetGenere(), deb);        
             
             Simulation.setTimeslot(0);            
@@ -105,8 +108,13 @@ public class Simulation {
         //Génération des graphiques
         //GraphCharge_Delai.GenerateGraph();
         Graph_Temps_TauxUR.GenerateGraph();
-       /* GraphDebit_NbPaquet.GenerateGraph();
-        GraphDebitFourni_Temps.GenerateGraph();*/
+        //GraphDebit_NbPaquet.GenerateGraph();
+        GraphDebitFourni_Temps.GenerateGraph();
+        
+        // System.out.println("NBtotalBits = " + cellule0.getNbTotalBitsEnvoye());
+        int bitsparUR = (cellule0.getNbTotalURutilisee() == 0) ? 0 : (cellule0.getNbTotalBitsEnvoye() / cellule0.getNbTotalURutilisee());
+        Graph_BitsUR_Temps.add(getTemps(), bitsparUR);
+        Graph_BitsUR_Temps.GenerateGraph();
         /*for(int i = 0; i < cellule0.getUsers().size(); i++) {        	
             graphsDebitUtilisateurs.get(i).GenerateGraph();
         }*/

@@ -1,10 +1,13 @@
 package algorithme;
 
 import simulation.Cellule;
+import simulation.DistancePointAcces;
+
 import static simulation.Simulation.NB_PORTEUSES;
 import simulation.UR;
 import simulation.Utilisateur;
 import simulation.helper.Print;
+import simulation.helper.Rnd;
 
 public class MaxSNR extends Algorithme { 
     public MaxSNR(Cellule cellule) {
@@ -24,7 +27,7 @@ public class MaxSNR extends Algorithme {
         // Pour chaque utilisateurs, on va regarder ceux qui ont des paquets à recevoir et celui qui a le meilleur mkn
         for(Utilisateur util : this.cellule.getUsers()) {
             // Si il a au moins un paquet à envoyer
-            if(this.cellule.getNbPaquetAEnvoyer(util) > 0) { 
+            if(this.cellule.getNbBitAEnvoyer(util) > 0) { 
                 // Si l'utilisateur aura encore des bits à recevoir à ce moment ci de l'allocation
                 if(this.cellule.getNbBitAEnvoyer(util) - this.getNbBitsATransmettre(util) > 0) {
                     int mkn = util.getMkn();
@@ -40,11 +43,18 @@ public class MaxSNR extends Algorithme {
         }
         
         // Si on a trouvé un utilisateur, on lui affecte l'UR
-        if(utilMknmax != null) {
+        if(utilMknmax != null) {            
+            if(utilMknmax.getDistance() == DistancePointAcces.PROCHE){
+            	ur.setNbBits(Rnd.rndint(4, 8)); 
+            }
+            else {
+            	ur.setNbBits(Rnd.rndint(1, 5)); // L'UR peut transporter un nombre aléatoire de bits suivant les conditions radios
+            }
+            
             this.addNbBitsATransmettre(utilMknmax, ur.getNbBits()); 
-            this.affecterUR(ur, utilMknmax);          	
+            this.affecterUR(ur, utilMknmax);             
+        
             //Print.print("Affecté à Util " + utilMknmax.getId() + " - UR : "+ur.getId() + " Mkn: " + mknmax);
-
             Print.affectationUR(this, utilMknmax, ur);
         }
          
@@ -73,5 +83,6 @@ public class MaxSNR extends Algorithme {
             this.calculNbBitsTransmis(ur);  
             this.cellule.envoyerUR(ur);
         }  
+        Print.forceAffectationUR();
     }    
 }

@@ -2,10 +2,13 @@ package algorithme;
 
 import java.util.Iterator;
 import simulation.Cellule;
+import simulation.DistancePointAcces;
+
 import static simulation.Simulation.NB_PORTEUSES;
 import simulation.UR;
 import simulation.Utilisateur;
 import simulation.helper.Print;
+import simulation.helper.Rnd;
 
 public class RR extends Algorithme {
     private Iterator<Utilisateur> it = null;
@@ -34,16 +37,23 @@ public class RR extends Algorithme {
             if(cellule.getNbBitAEnvoyer(util) > 0){
                 // S'il y aura toujours des bits à transmettre à ce moment de l'allocation
                 if(cellule.getNbBitAEnvoyer(util) - this.getNbBitsATransmettre(util) > 0) {
-                    paquetAEnvoyer = true;
-                    this.addNbBitsATransmettre(util, ur.getNbBits());
+                    paquetAEnvoyer = true;                    
                 }                
             }
         }
 
         // Si on a trouvé un utilisateur qui à un paquet à envoyer, on lui alloue une UR
         if(util != null && paquetAEnvoyer){
-            this.affecterUR(ur, util);  
-            Print.affectationUR(this, util, ur);            
+        	if(util.getDistance() == DistancePointAcces.PROCHE){
+            	ur.setNbBits(Rnd.rndint(4, 8)); 
+            }
+            else {
+            	ur.setNbBits(Rnd.rndint(1, 5)); // L'UR peut transporter un nombre aléatoire de bits suivant les conditions radios
+            }
+            
+            this.addNbBitsATransmettre(util, ur.getNbBits());
+            this.affecterUR(ur, util);      
+            Print.affectationUR(this, util, ur);
         }
 
         return ur;
@@ -71,5 +81,6 @@ public class RR extends Algorithme {
             this.calculNbBitsTransmis(ur);
             this.cellule.envoyerUR(ur);
         }       
+        Print.forceAffectationUR();
     }    
 }

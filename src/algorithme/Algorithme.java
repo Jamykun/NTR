@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import simulation.*;
+import simulation.graphique.Graph_BitsUR_Temps;
+
 import static simulation.Simulation.NB_PORTEUSES;
 
 public abstract class Algorithme {
@@ -86,8 +88,8 @@ public abstract class Algorithme {
     /**
      * @return Taux d'utilisation des UR dans le timeslot courant
      */
-    public double getTauxUtilisationUR() {
-    	return (this.urAEnvoyer.size() / (double)NB_PORTEUSES);
+    public int getTauxUtilisationUR() {
+    	return Math.round((this.urAEnvoyer.size() / (float)NB_PORTEUSES) * 100);
     }
     
     /**

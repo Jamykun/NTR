@@ -36,6 +36,21 @@ public class Print {
         }
     }
     
+    public static synchronized void forceAffectationUR() {
+        if(Simulation.PRINT) {
+            System.out.println("\nAffectations d'UR effectuées par " + Simulation.ALGO + " :");
+            
+            for(Map.Entry<Utilisateur, ArrayList<UR>> set : affectationUR.entrySet()) {                    
+                System.out.print("Utilisateur " + set.getKey().getId() + " > ");
+                for(UR set_ur : set.getValue()) {
+                    System.out.print(set_ur.getId() /*+ "("+set_ur.getNbBits()+")"*/+"\t");                        
+                }
+                System.out.print("\n");
+            }
+            System.out.print("\n");        
+        }
+    }
+    
     public static synchronized void paquetDebutEnvoi(UR ur, Paquet paquetActuel) {
        /* if(Simulation.PRINT) {
             System.out.println("Utilisateur " + ur.getUtilisateur().getId() + " > [ ] Paquet " + paquetActuel.getId() +" : Début d'emission (UR" + ur.getId() + ") - Taille: "+ paquetActuel.getNbBitOrigine()+" bit(s)");

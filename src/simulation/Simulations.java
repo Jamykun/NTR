@@ -1,9 +1,10 @@
 package simulation;
 
 import java.io.IOException;
-import simulation.graphique.generateur.GraphMoyenneValeursFinales;
 
-public class Simulations implements Runnable {
+import simulation.graphique.generateur.GraphFusion;
+
+public class Simulations {
     private static final int NB_UTILISATEURS_MAX = 10;
     private static final String GRAPH = "Graph_Temps_TauxUR";
     
@@ -20,15 +21,14 @@ public class Simulations implements Runnable {
         
         // Génération des graphs synthétisants les résultats
         String[] params = { GRAPH, "RR" };
+        GraphFusion.main(params);
+        String[] params2 = { GRAPH, "MaxSNR" };
+        GraphFusion.main(params2);
+        /*String[] params = { GRAPH, "RR" };
         GraphMoyenneValeursFinales.main(params);
         String[] params2 = { GRAPH, "MaxSNR" };
-        GraphMoyenneValeursFinales.main(params2);
+        GraphMoyenneValeursFinales.main(params2);*/
         
         System.out.println("> Toutes les simulations sont terminées");
-    }
-
-    @Override
-    public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
