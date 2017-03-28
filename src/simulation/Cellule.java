@@ -197,7 +197,7 @@ public class Cellule {
         }
 
         UR ur = this.ur.get(i);
-        ur.setNbBits(0);
+        ur.setNbBits(Rnd.rndint(1, 8));
         ur.setAffectation(null);
         return ur;
     }

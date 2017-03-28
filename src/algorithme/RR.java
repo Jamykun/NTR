@@ -44,12 +44,12 @@ public class RR extends Algorithme {
 
         // Si on a trouvé un utilisateur qui à un paquet à envoyer, on lui alloue une UR
         if(util != null && paquetAEnvoyer){
-        	if(util.getDistance() == DistancePointAcces.PROCHE){
-            	ur.setNbBits(Rnd.rndint(4, 8)); 
+            /*if(util.getDistance() == DistancePointAcces.PROCHE){
+            	ur.setNbBits(7); 
             }
             else {
-            	ur.setNbBits(Rnd.rndint(1, 5)); // L'UR peut transporter un nombre aléatoire de bits suivant les conditions radios
-            }
+            	ur.setNbBits(3); // L'UR peut transporter un nombre aléatoire de bits suivant les conditions radios
+            }*/
             
             this.addNbBitsATransmettre(util, ur.getNbBits());
             this.affecterUR(ur, util);      

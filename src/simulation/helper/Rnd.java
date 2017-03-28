@@ -1,7 +1,9 @@
 package simulation.helper;
 
+import java.util.Random;
+
 public class Rnd {
-    public static int rndint(int min, int max) {	
+    public static int rndint(int min, int max) {
         return (int) (min + (Math.random() * (max - min)));
     }
 

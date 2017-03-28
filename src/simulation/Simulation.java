@@ -20,8 +20,8 @@ public class Simulation {
     public static final int NB_PORTEUSES = 128;
     public static final int SIMULATION_TIMESLOTS = 10000;
     public static final int NB_TIMESLOT_TRAITEE = 5;
-    public static int NB_UTILISATEURS = 5;
-    public static final int DEBIT_GENERE_MOYEN = 40;
+    public static int NB_UTILISATEURS = 4;
+    public static final int DEBIT_GENERE_MOYEN = 50;
     private static int tick;
     private static int timeslot;
     private static ArrayList<GraphDebit_NbPaquet_Utilisateur> graphsDebitUtilisateurs = new ArrayList<>();
@@ -68,11 +68,12 @@ public class Simulation {
                 intervalMAJdebit--;
                 if(intervalMAJdebit == -1) {
                     intervalMAJdebit = Rnd.rndint(50,1000);
-                    nbBitsInterval = Rnd.rndint(DEBIT_GENERE_MOYEN-(DEBIT_GENERE_MOYEN / 2), DEBIT_GENERE_MOYEN+(DEBIT_GENERE_MOYEN / 2));
+                    nbBitsInterval = Rnd.rndint(DEBIT_GENERE_MOYEN-(DEBIT_GENERE_MOYEN / 4), DEBIT_GENERE_MOYEN+(DEBIT_GENERE_MOYEN / 4));
                 }                 
-                int nbBits = Rnd.rndint(nbBitsInterval-(nbBitsInterval / 4), nbBitsInterval+(nbBitsInterval / 4));
+                
                                
                 for(Utilisateur util : cellule0.getUsers()) {
+                    int nbBits = Rnd.rndint(nbBitsInterval-(nbBitsInterval / 8), nbBitsInterval+(nbBitsInterval / 8));
                     cellule0.addPaquetsFromInternet(util, nbBits);
                     Print.print("Utilisateur " + util.getId() + " > Ajout de " + nbBits + " bits dans son buffer. Buffer : " + cellule0.getNbPaquetAEnvoyer(util) + " paquet(s) / Paquet en création : " + cellule0.getNbBitPaquetEnCreation(util) + " bits");
                 }                
@@ -91,7 +92,7 @@ public class Simulation {
                 }                
                 Graph_Temps_TauxUR.add(getTemps(), algo.getTauxUtilisationUR());
                 GraphDebit_NbPaquet.add(cellule0.getNbTotalPaquetGenere(), (cellule0.getNbTotalURutilisee() == 0) ? 0 : (cellule0.getNbTotalBitsEnvoye() / cellule0.getNbTotalURutilisee()));
-
+                Print.print("Nb UR utilisée : " + cellule0.getNbTotalURutilisee());
                 algo.changerTimeslot(); 
                 cellule0.changeTimeslot();	
                 Print.changerTimeslot();

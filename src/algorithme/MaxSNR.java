@@ -44,12 +44,12 @@ public class MaxSNR extends Algorithme {
         
         // Si on a trouvé un utilisateur, on lui affecte l'UR
         if(utilMknmax != null) {            
-            if(utilMknmax.getDistance() == DistancePointAcces.PROCHE){
-            	ur.setNbBits(Rnd.rndint(4, 8)); 
-            }
+            //if(utilMknmax.getDistance() == DistancePointAcces.PROCHE){
+            	ur.setNbBits(Rnd.rndint(5, 8)); 
+            /*}
             else {
-            	ur.setNbBits(Rnd.rndint(1, 5)); // L'UR peut transporter un nombre aléatoire de bits suivant les conditions radios
-            }
+            	ur.setNbBits(3); // L'UR peut transporter un nombre aléatoire de bits suivant les conditions radios
+            }*/
             
             this.addNbBitsATransmettre(utilMknmax, ur.getNbBits()); 
             this.affecterUR(ur, utilMknmax);             
