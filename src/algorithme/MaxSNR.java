@@ -45,7 +45,7 @@ public class MaxSNR extends Algorithme {
         // Si on a trouvé un utilisateur, on lui affecte l'UR
         if(utilMknmax != null) {            
             //if(utilMknmax.getDistance() == DistancePointAcces.PROCHE){
-            	ur.setNbBits(Rnd.rndint(5, 8)); 
+            	ur.setNbBits(mknmax); 
             /*}
             else {
             	ur.setNbBits(3); // L'UR peut transporter un nombre aléatoire de bits suivant les conditions radios

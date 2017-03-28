@@ -35,10 +35,10 @@ public class Utilisateur {
         
         public int getMkn() {
             if(this.distance == DistancePointAcces.PROCHE) {
-            	return Rnd.rndint(0, 4);
+            	return Rnd.rndint(4, 8);
             }
             else {
-            	return Rnd.rndint(0, 6);
+            	return Rnd.rndint(1, 8);
             }
         }
 }

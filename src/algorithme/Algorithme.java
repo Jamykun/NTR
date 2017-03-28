@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import simulation.*;
-import simulation.graphique.Graph_BitsUR_Temps;
+import simulation.graphique.Graph_Temps_BitsUR;
 
 import static simulation.Simulation.NB_PORTEUSES;
 

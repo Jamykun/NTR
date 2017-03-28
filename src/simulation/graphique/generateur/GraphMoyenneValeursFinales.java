@@ -29,14 +29,14 @@ public class GraphMoyenneValeursFinales {
             
             //Moyenne des derniers débit du fichier
             int sum = 0;
-            int i = lines.size() - 100;
+            int i = lines.size() - 50;
             if(i < 0) {
                 i = 0;
             }
             int nbElem = lines.size() - i;
             for (i = i; i < lines.size(); i++) {
                 String[] parts = lines.get(i).split(";");
-                sum += Integer.parseInt(parts[1]);	
+                sum += Double.parseDouble(parts[1]);	
             }
             out = (sum / nbElem);
             

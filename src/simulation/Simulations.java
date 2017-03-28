@@ -6,12 +6,12 @@ import simulation.graphique.generateur.GraphFusion;
 import simulation.graphique.generateur.GraphMoyenneValeursFinales;
 
 public class Simulations {
-    private static final int NB_UTILISATEURS_MAX = 12;
+    private static final int NB_UTILISATEURS_MAX = 14;
     private static final String GRAPH = "Graph_Temps_TauxUR";
     
     public static void main(String[] args) throws IOException  {
         // Lancement des simulations avec les deux algorithmes
-        for(int nbUtil = 2; nbUtil <= NB_UTILISATEURS_MAX; nbUtil=nbUtil+2) {
+        for(int nbUtil = 1; nbUtil <= NB_UTILISATEURS_MAX; nbUtil++) {
             String[] params = { nbUtil+"", "RR" }; 
             Simulation.main(params); 
             

@@ -13,11 +13,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import simulation.Simulation;
 
-public class Graph_BitsUR_Temps {
-    private static final String GRAPH_NAME = "Graph_BitsUR_Temps";
-    private static HashMap<Integer, Integer> points = new HashMap<>();
+public class Graph_Temps_BitsUR {
+    private static final String GRAPH_NAME = "Graph_Temps_BitsUR";
+    private static HashMap<Integer, Double> points = new HashMap<>();
 
-    public static void add(int x, int y) {
+    public static void add(int x, Double y) {
         points.put(x, y);
     }
 

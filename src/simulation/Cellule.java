@@ -27,6 +27,7 @@ public class Cellule {
     private int nbTotalBitsEnvoye = 0;
     private int nbBitsEnvoye50ticks = 0;
     private int nbTotalURutilisee = 0;
+    private int nbURutiliseeTimeslot = 0;
     
     public Cellule(int numero) {	
         this.numero = numero;
@@ -37,6 +38,10 @@ public class Cellule {
         this.users = new ArrayList<>();		
         this.buffersUsers = new HashMap<>();
         this.bitsEnAttentesUsers = new HashMap<>();
+    }
+    
+    public int getNbBitsFourniTimeslot() {
+    	return nbBitsFourniTimeslot;
     }
     
     public int getNumero() {
@@ -65,9 +70,9 @@ public class Cellule {
         return copy;
     }
 
-   /* public List<UR> getUrs() {
-        return this.ur;
-    }*/
+    public int getNbURutiliseeTimeslot() {
+        return this.nbURutiliseeTimeslot;
+    }
     
     public void setAlgorithme(Algorithme algo) {
         this.algo = algo;
@@ -216,6 +221,7 @@ public class Cellule {
         }
         this.nbBitsGenereTimeslot = 0;
         this.nbBitsFourniTimeslot = 0;
+        this.nbURutiliseeTimeslot = 0;
     }
         
     /**
@@ -242,15 +248,16 @@ public class Cellule {
     	return this.bitsEnAttentesUsers.get(util);
     }
     
-    public int getNbBitsParNbUR() {
+   /* public int getNbBitsParNbUR() {
         return this.nbTotalBitsEnvoye / this.nbTotalURutilisee;
-    }
+    }*/
 
     /**
      * @param ur UR à envoyer
      */
-    public void envoyerUR(UR ur) {
-    	this.nbTotalURutilisee++;
+    public void envoyerUR(UR ur) {    	
+    	this.nbTotalURutilisee++; 	
+    	this.nbURutiliseeTimeslot++;
         int nbBitsRestantUR = ur.getNbBits();
         Paquet paquetPrecedent = this.getPaquetActuel(ur.getUtilisateur());
 
@@ -286,7 +293,7 @@ public class Cellule {
                         Print.paquetEnvoye(ur, paquetActuel, this.algo);
                         GraphCharge_Delai.add(paquetActuel.getId(), paquetActuel.getDelai()); 
                     }
-                }  
+                }                
             }      
         }
 
