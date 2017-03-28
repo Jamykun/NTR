@@ -70,7 +70,7 @@ public class Simulation {
                 intervalMAJdebit--;
                 if(intervalMAJdebit == -1) {
                     intervalMAJdebit = Rnd.rndint(1,100);
-                    nbBitsInterval = Rnd.rndint(DEBIT_GENERE_MOYEN-(DEBIT_GENERE_MOYEN / 4), DEBIT_GENERE_MOYEN+(DEBIT_GENERE_MOYEN / 4));
+                    nbBitsInterval = /*Rnd.rndint(*/DEBIT_GENERE_MOYEN/*-(DEBIT_GENERE_MOYEN / 4), DEBIT_GENERE_MOYEN+(DEBIT_GENERE_MOYEN / 4))*/;
                 }                 
                 
                                

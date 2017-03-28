@@ -1,13 +1,13 @@
 package simulation;
 
 public class UR {	
-	private Utilisateur utilisateur;	
+	private Utilisateur utilisateur = null;	
 	private Cellule cellule;	
 	private int id;
 	private int nbBits;
-	private boolean finDePasquet = false; // TODO: Gestion des fins de paquet dans l'utilisateur pour calculer la latence
+	private boolean finDePasquet = false;
 	
-	// le constructeur de point d'acces une ur a un id et est ds un et un point d'acces   
+	// le constructeur de point d'acces une ur a un id et est ds un et un point d'acces  
 	
 	public UR(int id, Cellule cellule) {
 		this.cellule = cellule;

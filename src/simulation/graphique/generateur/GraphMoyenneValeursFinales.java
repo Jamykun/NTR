@@ -29,7 +29,7 @@ public class GraphMoyenneValeursFinales {
             
             //Moyenne des derniers débit du fichier
             int sum = 0;
-            int i = lines.size() - 50;
+            int i = lines.size() - 2000;
             if(i < 0) {
                 i = 0;
             }

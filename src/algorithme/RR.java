@@ -43,7 +43,8 @@ public class RR extends Algorithme {
         }
 
         // Si on a trouvé un utilisateur qui à un paquet à envoyer, on lui alloue une UR
-        if(util != null && paquetAEnvoyer){            
+        if(util != null && paquetAEnvoyer){  
+            ur.setNbBits(util.getMkn());
             this.addNbBitsATransmettre(util, ur.getNbBits());
             this.affecterUR(ur, util);      
             Print.affectationUR(this, util, ur);
