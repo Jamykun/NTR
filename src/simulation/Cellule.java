@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import simulation.graphique.GraphCharge_Delai;
+import simulation.graphique.Graph_Paquet_Delai;
 import simulation.helper.Print;
 
 public class Cellule {	
@@ -279,7 +279,7 @@ public class Cellule {
                     paquetActuel.addUrUtilisee(ur);
                     nbBitsRestantUR -= nbBitsPaquetActuel;
                     Print.paquetEnvoye(ur, paquetActuel, this.algo);                    
-                    GraphCharge_Delai.add(paquetActuel.getId(),paquetActuel.getDelai()); 
+                    Graph_Paquet_Delai.add(Simulation.getTemps(), paquetActuel.getDelai(), ur.getUtilisateur().getDistance()); 
                 }
                 else { // Si l'UR sera pleinement utilisée
                     paquetActuel.subNbBits(nbBitsRestantUR); // On "envoi le paquet" : On retire des bits au paquet
@@ -290,7 +290,7 @@ public class Cellule {
                     nbBitsRestantUR = 0;
                     if(paquetActuel.getNbBitActuel() == 0) { // Si on a consommé entierement un paquet
                         Print.paquetEnvoye(ur, paquetActuel, this.algo);
-                        GraphCharge_Delai.add(paquetActuel.getId(), paquetActuel.getDelai()); 
+                        Graph_Paquet_Delai.add(Simulation.getTemps(), paquetActuel.getDelai(), ur.getUtilisateur().getDistance()); 
                     }
                 }                
             }      

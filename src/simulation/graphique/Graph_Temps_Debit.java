@@ -11,8 +11,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import simulation.Simulation;
 
-public class GraphDebit_NbPaquet {
-    private static final String GRAPH_NAME = "GraphDebit_NbPaquet";
+public class Graph_Temps_Debit {
+    private static final String GRAPH_NAME = "Graph_Temps_Debit";
     private static HashMap<Integer, Integer> points = new HashMap<>();
 
     public static void add(int nbPaquet, int debit) {

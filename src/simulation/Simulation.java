@@ -2,9 +2,9 @@ package simulation;
 import algorithme.Algorithme;
 import algorithme.MaxSNR;
 import algorithme.RR;
-import simulation.graphique.GraphCharge_Delai;
+import simulation.graphique.Graph_Paquet_Delai;
 import simulation.graphique.GraphDebitFourni_Temps;
-import simulation.graphique.GraphDebit_NbPaquet;
+import simulation.graphique.Graph_Temps_Debit;
 import simulation.graphique.GraphDebit_NbPaquet_Utilisateur;
 import simulation.graphique.Graph_Temps_BitsUR;
 import simulation.graphique.Graph_Temps_TauxUR;
@@ -93,7 +93,7 @@ public class Simulation {
                     GraphDebitFourni_Temps.add(Simulation.getTemps(), cellule0.getDebitFourni());
                 }                
                 Graph_Temps_TauxUR.add(getTemps(), algo.getTauxUtilisationUR());
-                GraphDebit_NbPaquet.add(cellule0.getNbTotalPaquetGenere(), (cellule0.getNbTotalURutilisee() == 0) ? 0 : (cellule0.getNbTotalBitsEnvoye() / cellule0.getNbTotalURutilisee()));
+                Graph_Temps_Debit.add(getTemps(), (cellule0.getNbTotalURutilisee() == 0) ? 0 : (cellule0.getNbTotalBitsEnvoye() / cellule0.getNbTotalURutilisee()));
 
                 Print.print("Nombre de paquet traité : " + cellule0.getNbTotalPaquetGenere());
                 Print.print("Nb bits fourni dans le timeslot : " + cellule0.getNbBitsFourniTimeslot());
@@ -118,9 +118,12 @@ public class Simulation {
         System.out.println("Nombre de paquet généré : " + cellule0.getNbTotalPaquetGenere() + " paquets / " + cellule0.getNbTotalBitsGenere() + " bits"/* +" => " + ((float)cellule0.getNbTotalBitsGenere()/(float)cellule0.getNbTotalPaquetGenere()) + "%"*/);
         System.out.println("Nombre de paquet restant dans les buffers : " + cellule0.getNbTotalPaquetAEnvoyer());
         System.out.println("Nombre de bits totalement genere : " + debitGenere);
+        
         //Génération des graphiques
         Graph_Temps_TauxUR.GenerateGraph();
         Graph_Temps_BitsUR.GenerateGraph();
+        Graph_Paquet_Delai.GenerateGraph();
+        GraphDebitFourni_Temps.GenerateGraph();
         
         // System.out.println("NBtotalBits = " + cellule0.getNbTotalBitsEnvoye());
        // double bitsparUR = (cellule0.getNbTotalURutilisee() == 0) ? 0 : (cellule0.getNbTotalBitsEnvoye() / cellule0.getNbTotalURutilisee());
