@@ -7,10 +7,10 @@ import java.io.InputStreamReader;
 import simulation.graphique.generateur.GraphMoyenneValeursFinales;
 
 public class Simulations {
-    private static final int NB_UTILISATEURS_MAX = 18;
+    private static final int NB_UTILISATEURS_MAX = 20;
     
     public static void main(String[] args) throws IOException  {
-        if(previousResults()) {
+        if(previousResults(new File("exports/"))) {
             System.out.println("Les précédents résultats exportés doivent être supprimés. Les supprimer ? [o/n]");
             BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));     
             String stdin = buffer.readLine();
@@ -23,8 +23,8 @@ public class Simulations {
         }
         
         // Lancement des simulations avec les deux algorithmes
-        System.out.println("Lancement de " + (NB_UTILISATEURS_MAX*2) +" simulation de 1 à " + NB_UTILISATEURS_MAX + " utilisateurs avec RR et MaxSNR");
-        for(int nbUtil = 1; nbUtil <= NB_UTILISATEURS_MAX; nbUtil++) {
+        System.out.println("Lancement de " + (NB_UTILISATEURS_MAX*2) +" simulation de 2 à " + NB_UTILISATEURS_MAX + " utilisateurs avec RR et MaxSNR");
+        for(int nbUtil = 2; nbUtil <= NB_UTILISATEURS_MAX; nbUtil++) {
             String[] params = { nbUtil+"", "RR" }; 
             Simulation.main(params); 
             
@@ -36,7 +36,7 @@ public class Simulations {
         // Génération des graphs synthétisants les résultats
         String[] params = { "Graph_Temps_TauxUR", (Simulation.SIMULATION_TIMESLOTS / 10)+"" };
         GraphMoyenneValeursFinales.main(params);
-        String[] params2 = { "Graph_Temps_BitsUR", (Simulation.SIMULATION_TIMESLOTS/ 10)+"" };
+        String[] params2 = { "Graph_Temps_BitsUR", "1" };
         GraphMoyenneValeursFinales.main(params2);
         String[] params3 = { "Graph_Temps_DebitFourni", (Simulation.SIMULATION_TIMESLOTS / 400)+"" };
         GraphMoyenneValeursFinales.main(params3);
@@ -46,18 +46,22 @@ public class Simulations {
         System.out.println("Toutes les simulations sont terminées");
     }
     
-    private static boolean previousResults() {
-        File folder = new File("exports/");
+     private static boolean previousResults(File folder) {
+        File[] files = folder.listFiles();
         if(folder.listFiles() == null) {
             return false;
         }
         for (final File fileEntry : folder.listFiles()) {
             if (!fileEntry.isDirectory()) {
                 return true;
+            } else {
+                if(previousResults(fileEntry)) {
+                    return true;
+                }
             }
         }
         return false;
-    } 
+    }
     
     private static void deletePreviousResults(File folder) {
         File[] files = folder.listFiles();

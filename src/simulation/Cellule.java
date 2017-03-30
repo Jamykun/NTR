@@ -43,6 +43,10 @@ public class Cellule {
     	return nbBitsFourniTimeslot;
     }
     
+    public int getNbBitsGenereTimeslot(){
+    	return this.nbBitsGenereTimeslot;
+    }
+    
     public int getNumero() {
         return this.numero;
     }
@@ -222,27 +226,24 @@ public class Cellule {
     	return (nbTotalPaquet * 100) / Simulation.getTemps();
     }
     
-    public int getDebitGenere(){
-    	//if (Simulation.getTemps()==0 )
-    	return this.nbBitsGenereTimeslot /*/ (Simulation.getTemps()+1)*/;
-    	/*else 
-    		return (this.nbBitsGenereTimeslot * 100) / Simulation.getTemps();*/
-    }
-    
+    /**
+     * Récupérer le débit fourni par la cellule sur les 50 derniers timeslots
+     * @return 
+     */
     public int getDebitFourni(){
     	int rtn = this.nbBitsEnvoye50ticks / 50;
     	this.nbBitsEnvoye50ticks = 0;
     	return rtn;
     }
     
+    /**
+     * @param util
+     * @return Le nombre de bits en attente de création d'un paquet pour un utilisateur
+     */
     public int getNbBitPaquetEnCreation(Utilisateur util) {
     	return this.bitsEnAttentesUsers.get(util);
     }
     
-   /* public int getNbBitsParNbUR() {
-        return this.nbTotalBitsEnvoye / this.nbTotalURutilisee;
-    }*/
-
     /**
      * @param ur UR à envoyer
      */
@@ -270,8 +271,9 @@ public class Cellule {
                     this.nbBitsFourniTimeslot += nbBitsPaquetActuel;
                     paquetActuel.addUrUtilisee(ur);
                     nbBitsRestantUR -= nbBitsPaquetActuel;
+                    
                     Print.paquetEnvoye(ur, paquetActuel, this.algo);                    
-                    Graph_Temps_Delai.add(Simulation.getTemps(), paquetActuel.getDelai(), ur.getUtilisateur().getDistance()); 
+                    Graph_Temps_Delai.add(Simulation.getTemps(), paquetActuel.getDelai(), ur.getUtilisateur().getDistance());                    
                 }
                 else { // Si l'UR sera pleinement utilisée
                     paquetActuel.subNbBits(nbBitsRestantUR); // On "envoi le paquet" : On retire des bits au paquet
@@ -280,6 +282,7 @@ public class Cellule {
                     this.nbBitsFourniTimeslot += nbBitsRestantUR;
                     paquetActuel.addUrUtilisee(ur);
                     nbBitsRestantUR = 0;
+                    
                     if(paquetActuel.getNbBitActuel() == 0) { // Si on a consommé entierement un paquet
                         Print.paquetEnvoye(ur, paquetActuel, this.algo);
                         Graph_Temps_Delai.add(Simulation.getTemps(), paquetActuel.getDelai(), ur.getUtilisateur().getDistance()); 
@@ -287,7 +290,6 @@ public class Cellule {
                 }                
             }      
         }
-
         ur.setAffectation(null); // On libère l'UR
     }
 }

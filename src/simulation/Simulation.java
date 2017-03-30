@@ -4,12 +4,9 @@ import algorithme.MaxSNR;
 import algorithme.RR;
 import simulation.graphique.Graph_Temps_Delai;
 import simulation.graphique.Graph_Temps_DebitFourni;
-import simulation.graphique.Graph_Temps_Debit;
-import simulation.graphique.GraphDebit_NbPaquet_Utilisateur;
 import simulation.graphique.Graph_Temps_BitsUR;
 import simulation.graphique.Graph_Temps_TauxUR;
 import java.io.IOException;
-import java.util.ArrayList;
 import simulation.helper.Print;
 import simulation.helper.Rnd;
 
@@ -24,7 +21,6 @@ public class Simulation {
     public static final int DEBIT_GENERE_MOYEN = 50;
     private static int tick;
     private static int timeslot;
-    private static ArrayList<GraphDebit_NbPaquet_Utilisateur> graphsDebitUtilisateurs = new ArrayList<>();
     private static Algorithme algo;
 
     public static void main(String[] args) throws IOException {
@@ -48,13 +44,8 @@ public class Simulation {
             dist = DistancePA.change(dist);
             cellule0.addUtilisateur(util);         
             Print.creationUtil(util);
-            
-            graphsDebitUtilisateurs.add(new GraphDebit_NbPaquet_Utilisateur(util));
         }
 
-        int intervalMAJdebit = 0;
-        int nbBitsInterval = 0;
-        int debitGenere = 0;
         for(int for_tick = 0; for_tick < SIMULATION_TIMESLOTS; for_tick += NB_TIMESLOT_TRAITEE) {
             Simulation.setTick(for_tick);
             Print.print("\nTimeslot " + Simulation.tick + " à " + (Simulation.tick+NB_TIMESLOT_TRAITEE));                        
@@ -62,20 +53,9 @@ public class Simulation {
             for(int for_timeslot = 0; for_timeslot < NB_TIMESLOT_TRAITEE; for_timeslot++) {
                 Simulation.setTimeslot(for_timeslot);                
                 Print.print("\nTimeslot " + (Simulation.tick + Simulation.timeslot));
-                
-                // Génération d'un débit aléatoire
-                // A interval régulier, on change la valeur du débit moyen toujours dans un interval autour de DEBIT_GENERE_MOYEN
-                // afin d'obtenir un débit qui varie de façon vraiment aléatoire
-                intervalMAJdebit--;
-                if(intervalMAJdebit == -1) {
-                    intervalMAJdebit = Rnd.rndint(1,100);
-                    nbBitsInterval = /*Rnd.rndint(*/DEBIT_GENERE_MOYEN/*-(DEBIT_GENERE_MOYEN / 4), DEBIT_GENERE_MOYEN+(DEBIT_GENERE_MOYEN / 4))*/;
-                }                 
-                
                                
                 for(Utilisateur util : cellule0.getUsers()) {
-                    int nbBits = Rnd.rndint(nbBitsInterval-(nbBitsInterval / 8), nbBitsInterval+(nbBitsInterval / 8));
-                    debitGenere += nbBits;
+                    int nbBits = Rnd.rndint(DEBIT_GENERE_MOYEN-(DEBIT_GENERE_MOYEN / 8), DEBIT_GENERE_MOYEN+(DEBIT_GENERE_MOYEN / 8));
                     cellule0.addPaquetsFromInternet(util, nbBits);
                     Print.print("Utilisateur " + util.getId() + " > Ajout de " + nbBits + " bits dans son buffer. Buffer : " + cellule0.getNbPaquetAEnvoyer(util) + " paquet(s) / Paquet en création : " + cellule0.getNbBitPaquetEnCreation(util) + " bits");
                 }                
@@ -89,20 +69,13 @@ public class Simulation {
                     Graph_Temps_DebitFourni.add(Simulation.getTemps(), cellule0.getDebitFourni());
                 }                
                 Graph_Temps_TauxUR.add(getTemps(), algo.getTauxUtilisationUR());
-                Graph_Temps_Debit.add(getTemps(), (cellule0.getNbTotalURenvoye() == 0) ? 0 : (cellule0.getNbTotalBitsEnvoye() / cellule0.getNbTotalURenvoye()));
-                
-                double bitsParUR = (cellule0.getNbURutiliseeTimeslot() == 0) ? 0 : cellule0.getNbBitsFourniTimeslot() / (double)cellule0.getNbURutiliseeTimeslot();
-                //if(cellule0.getNbBitsFourniTimeslot() > 0) {
-                    Graph_Temps_BitsUR.add(Simulation.getTemps(), bitsParUR);
-                //}
-                
-                Print.print("Nombre de paquet traité : " + cellule0.getNbTotalPaquetGenere());
-                Print.print("Nb bits fourni dans le timeslot : " + cellule0.getNbBitsFourniTimeslot());
-                Print.print("Taux utilisation des UR : " + algo.getTauxUtilisationUR() + "%");   
-                Print.print("Débit généré : " + cellule0.getDebitGenere());
-                Print.print("Nb UR totalement utilisée : " + cellule0.getNbTotalURenvoye());
-                Print.print("Nb UR utilisée dans le timeslot : " + cellule0.getNbURutiliseeTimeslot());
-                Print.print("Bits/UR timeslot : " + bitsParUR);                
+               
+                Print.print("Timeslot :");  
+                Print.print("Nombre de bits généré : " + cellule0.getNbBitsGenereTimeslot());
+                Print.print("Nombre de bits fourni : " + cellule0.getNbBitsFourniTimeslot());                
+                Print.print("Taux utilisation des UR : " + algo.getTauxUtilisationUR() + "% ("+cellule0.getNbURutiliseeTimeslot()+"/"+NB_PORTEUSES+")");  
+                Print.print("\nTotal :");
+                Print.print("Nombre de paquet généré : " + cellule0.getNbTotalPaquetGenere());                
                 
                 algo.changerTimeslot(); 
                 cellule0.changeTimeslot();	
@@ -112,30 +85,29 @@ public class Simulation {
             
             Simulation.setTimeslot(0);            
         }
-        Print.print("Nombre de paquet généré : " + cellule0.getNbTotalPaquetGenere() + " paquets / " + cellule0.getNbTotalBitsGenere() + " bits"/* +" => " + ((float)cellule0.getNbTotalBitsGenere()/(float)cellule0.getNbTotalPaquetGenere()) + "%"*/);
-        Print.print("Nombre de paquet restant dans les buffers : " + cellule0.getNbTotalPaquetAEnvoyer());
-        Print.print("Nombre de bits totalement généré : " + debitGenere);
         if(args.length != 2) {
-            System.out.println("Fin de simulation");
-        }     
-        //Graph_Temps_BitsUR.add(Simulation.getTemps(), (cellule0.getNbTotalBitsEnvoye() / cellule0.getNbTotalURenvoye()));
-        
+            System.out.println("\nFin de simulation");
+        }  
+        Print.print("Nombre de paquet généré : " + cellule0.getNbTotalPaquetGenere() + " paquets / " + cellule0.getNbTotalBitsGenere() + " bits");
+        Print.print("Nombre de paquet restant dans les buffers : " + cellule0.getNbTotalPaquetAEnvoyer());      
+
         //Génération des graphiques
-        Graph_Temps_TauxUR.GenerateGraph();
+        Graph_Temps_BitsUR.add(Simulation.getTemps(), (cellule0.getNbTotalBitsEnvoye() / (double)cellule0.getNbTotalURenvoye()));
         Graph_Temps_BitsUR.GenerateGraph();
+        Graph_Temps_TauxUR.GenerateGraph();
         Graph_Temps_Delai.GenerateGraph();
         Graph_Temps_DebitFourni.GenerateGraph();
     }
 
-    public static synchronized int getTemps() {		
+    public static int getTemps() {		
         return Simulation.tick + Simulation.timeslot;
     }
     
-    public static synchronized void setTick(int tick) {		
+    public static void setTick(int tick) {		
         Simulation.tick = tick;
     }
     
-    public static synchronized void setTimeslot(int timeslot) {		
+    public static void setTimeslot(int timeslot) {		
         Simulation.timeslot = timeslot;
     }
 }

@@ -7,14 +7,12 @@ public class UR {
 	private int nbBits;
 	private boolean finDePasquet = false;
 	
-	// le constructeur de point d'acces une ur a un id et est ds un et un point d'acces  
-	
 	public UR(int id, Cellule cellule) {
 		this.cellule = cellule;
 		this.id = id;		
 	}
 	
-	// Nb de bits que peut contenir l'UR (Entre 0 et 10)
+	// Nb de bits que peut contenir l'UR (Entre [1;8[)
 	public void setNbBits(int nbBits) {
 		this.nbBits = nbBits;
 	}

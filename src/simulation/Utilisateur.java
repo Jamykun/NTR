@@ -38,7 +38,7 @@ public class Utilisateur {
             	return Rnd.rndint(4, 8);
             }
             else {
-            	return Rnd.rndint(1, 6);
+            	return Rnd.rndint(1, 8);
             }
         }
 }
