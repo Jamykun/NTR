@@ -16,20 +16,18 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import simulation.Simulation;
-import static simulation.Simulation.ALGO;
-import static simulation.Simulation.NB_UTILISATEURS;
 
 public class GraphMoyenneValeursFinales {    
-    public static double getGraphMeanLastValues(String file) {
+    public static double getGraphMeanLastValues(String file, int nbLastValue) {
         double out = 0;
         List<String> lines = new ArrayList<>();
         
         try {
             Files.lines(Paths.get(file)).forEach(x -> lines.add(x));
             
-            //Moyenne des derniers débit du fichier
-            int sum = 0;
-            int i = lines.size() - 4;
+            //Moyenne des dernieres valeur du fichier
+            double sum = 0;
+            int i = lines.size() - nbLastValue;
             if(i < 0) {
                 i = 0;
             }
@@ -38,14 +36,10 @@ public class GraphMoyenneValeursFinales {
                 String[] parts = lines.get(i).split(";");
                 sum += Double.parseDouble(parts[1]);	
             }
-            out = (sum / nbElem);
-            
-            // Valeur finale
-            /*String[] parts = lines.get(lines.size()-1).split(";");
-            out = Integer.parseInt(parts[1]);*/
+            out = (sum / (double)nbElem);
         } 
         catch (IOException e) {
-                System.out.println("Error en lectura del fichero: " + file);
+                System.err.println("Erreur " + file + " : " + e.getMessage());
         }
         return out;
     }
@@ -53,85 +47,100 @@ public class GraphMoyenneValeursFinales {
     private static GraphInfo getGraphInfo(String file) {
         GraphInfo gi = new GraphInfo();
         String[] raw = file.split("-");
-        if(raw.length < 3) {
-            return null;
+        gi.Graph = raw[0];
+        gi.Algo = raw[1];
+        gi.Charge = raw[2];
+        if(raw.length == 5) {
+            gi.Distance = raw[3].toLowerCase();
         }
-        gi.GraphName = raw[0];
-        gi.AlgoName = raw[1];
-        gi.ChargeValue = raw[2];
         return gi;
     } 
     
-    private static ArrayList<String> listFiles(String path, String algo) {
+    private static ArrayList<String> listFiles(String path) {
         File folder = new File(path);
         ArrayList<String> files = new ArrayList<>();
         for (final File fileEntry : folder.listFiles()) {
             if (!fileEntry.isDirectory()) {
-                GraphInfo gi = getGraphInfo(fileEntry.getName());         
-                
-                if(!fileEntry.getPath().toLowerCase().contains("merged") && !fileEntry.getPath().toLowerCase().contains("moyennevaleursfinales") && gi.AlgoName.toLowerCase().equals(algo.toLowerCase())) {
-                    files.add(fileEntry.getPath());
-                }
+                GraphInfo gi = getGraphInfo(fileEntry.getName());       
+                files.add(fileEntry.getPath());
             }
         }
         return files;
     }    
 
     public static void main(String[] args) throws IOException {
-        String graphName;
-        String algoName;
+        String graphName = "";
+        int nbLastValue;
         
         if(args.length == 2) {
             graphName = args[0];
-            algoName = args[1];
+            nbLastValue = Integer.parseInt(args[1]);
         }
         else {
             BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("Nom du graphe à fusionner [GraphDebitFourni_Temps] :");        
-            graphName = buffer.readLine();
-            if(graphName.equals("")) {
-                graphName = "GraphDebitFourni_Temps";
+            while(graphName.equals("")) {
+                System.out.println("Nom du graphe à fusionner :");        
+                graphName = buffer.readLine();
             }
 
-            System.out.println("Algorithme du graphe à fusionner ["+Simulation.ALGO+"] :");  
-            algoName = buffer.readLine();
-            if(algoName.toLowerCase().equals("maxsnr")) {
-                algoName = "MaxSNR";
-            } else if(algoName.toLowerCase().equals("rr")) {
-                algoName = "RR";
-            } else if(algoName.equals("")) {
-                algoName = Simulation.ALGO;
-            }
-            
+            System.out.println("Nombre de derniers resultats à fusionner :");  
+            nbLastValue = Integer.parseInt(buffer.readLine());            
         }
-        System.out.println("Graphique : " + graphName);
-        System.out.println("Algo : " + algoName);
+        if(args.length != 2) { // Si on n'est pas en mode automatique
+            System.out.println("Graphique : " + graphName);
+            System.out.println("Nombre de derniers resultats à fusionner : " + nbLastValue);
+        }
         
-        ArrayList<String> files = listFiles("./exports/"+graphName+"/", algoName);
+        ArrayList<String> files = listFiles("./exports/"+graphName+"/");
         if(files.isEmpty()) {
             System.out.println("Aucun graphique à traiter");
             System.exit(0);
         }
         
         ArrayList<HashMap<Double, Double>> graphsValues = new ArrayList<>();
-        HashMap<Integer, Double> mergedGraph = new HashMap<>();
+        HashMap<Integer, Double> mergedGraph_RR = new HashMap<>();
+        HashMap<Integer, Double> mergedGraph_MaxSNR = new HashMap<>();
+        HashMap<Integer, Double> mergedGraph_RR_Loin = new HashMap<>();
+        HashMap<Integer, Double> mergedGraph_MaxSNR_Loin = new HashMap<>();
+        
         for(String file : files) {
-            String charge = getGraphInfo(file).ChargeValue;
-            Double mean = getGraphMeanLastValues(file);
-            mergedGraph.put(Integer.valueOf(charge), mean);
+            GraphInfo gi = getGraphInfo(file);
+            Double mean = getGraphMeanLastValues(file, nbLastValue);
+            
+            if(gi.Algo.toLowerCase().equals("rr")) {
+                if(gi.Distance == null || gi.Distance.equals("proche")) {
+                    mergedGraph_RR.put(Integer.valueOf(gi.Charge), mean);
+                } else {
+                    mergedGraph_RR_Loin.put(Integer.valueOf(gi.Charge), mean);
+                }
+            } else if(gi.Algo.toLowerCase().equals("maxsnr")) {
+                if(gi.Distance == null || gi.Distance.equals("proche")) {
+                    mergedGraph_MaxSNR.put(Integer.valueOf(gi.Charge), mean);
+                } else {
+                    mergedGraph_MaxSNR_Loin.put(Integer.valueOf(gi.Charge), mean);
+                }
+            } else {
+                System.err.println("L'algorithme " + gi.Algo +" n'est pas supporté");
+                System.exit(-1);
+            }
         }
         
-        GenerateGraph(mergedGraph, "exports/"+graphName+"/"+graphName+"-"+algoName+"-MoyenneValeursFinales.csv");
+        String[] newFilename = graphName.split("_");
+        GenerateGraph(mergedGraph_RR, mergedGraph_MaxSNR, mergedGraph_RR_Loin, mergedGraph_MaxSNR_Loin, "exports/Graph_Charge_"+newFilename[2]+".csv");
 
-        System.out.println(files.size() + " graphique(s) traité(s)");
+        System.out.println(files.size() + " graphique(s) traité(s) pour exports/Graph_Charge_"+newFilename[2]+".csv");
     }
     
-    private static void GenerateGraph(HashMap<Integer, Double> points, String path) throws IOException {
+    private static void GenerateGraph(HashMap<Integer, Double> points_RR, HashMap<Integer, Double> points_MaxSNR, HashMap<Integer, Double> points_RR_Loin, HashMap<Integer, Double> points_MaxSNR_Loin, String path) throws IOException {
         // Tri par x
         Comparator<Integer> comparator;
-        comparator = (Integer o1, Integer o2) -> (int) (o1 - o2);    	
-    	SortedSet<Integer> keys = new TreeSet<>(comparator);
-    	keys.addAll(points.keySet());
+        comparator = (Integer o1, Integer o2) -> (int) (o1 - o2);  
+        
+    	SortedSet<Integer> keys_RR = new TreeSet<>(comparator);
+    	keys_RR.addAll(points_RR.keySet());
+        
+        /*SortedSet<Integer> keys_MaxSNR = new TreeSet<>(comparator);
+    	keys_MaxSNR.addAll(points_MaxSNR.keySet());*/
         
         // Création du fichier et des répertoires
         File f = new File(path); 
@@ -140,8 +149,19 @@ public class GraphMoyenneValeursFinales {
         FileOutputStream fos = new FileOutputStream(f);
         
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-    	for(Integer key : keys) {
-            bw.write(key+";"+points.get(key).intValue());
+        if(points_MaxSNR_Loin.size() != 0 && points_RR_Loin.size() != 0) {
+            bw.write(";RR Proche;RR Loin;MaxSNR Proche;MaxSNR Loin");
+        } else {
+            bw.write(";RR;MaxSNR");
+        }
+        bw.newLine(); 
+
+    	for(Integer key : keys_RR) {   
+            if(points_MaxSNR_Loin.size() != 0 && points_RR_Loin.size() != 0) {
+                bw.write("\""+key+"\";\""+points_RR.get(key).toString().replace(".", ",")+"\";\""+points_RR_Loin.get(key).toString().replace(".", ",").replace("NaN", "0,0")+"\";\""+points_MaxSNR.get(key).toString().replace(".", ",")+"\";\""+points_MaxSNR_Loin.get(key).toString().replace(".", ",").replace("NaN", "0,0")+"\"");
+            } else {
+                bw.write("\""+key+"\";\""+points_RR.get(key).toString().replace(".", ",")+"\";\""+points_MaxSNR.get(key).toString().replace(".", ",")+"\"");
+            }            
             bw.newLine();
     	}
 

@@ -15,9 +15,9 @@ import simulation.Simulation;
 
 public class Graph_Temps_TauxUR {
     private static final String GRAPH_NAME = "Graph_Temps_TauxUR";
-    private static HashMap<Integer, Integer> points = new HashMap<>();
+    private static HashMap<Integer, Double> points = new HashMap<>();
 
-    public static void add(int temps, int utilisationUR) {
+    public static void add(int temps, double utilisationUR) {
         points.put(temps, utilisationUR);
     }
 

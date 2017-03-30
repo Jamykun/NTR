@@ -2,13 +2,11 @@ package algorithme;
 
 import java.util.Iterator;
 import simulation.Cellule;
-import simulation.DistancePointAcces;
 
 import static simulation.Simulation.NB_PORTEUSES;
 import simulation.UR;
 import simulation.Utilisateur;
 import simulation.helper.Print;
-import simulation.helper.Rnd;
 
 public class RR extends Algorithme {
     private Iterator<Utilisateur> it = null;
@@ -69,7 +67,7 @@ public class RR extends Algorithme {
         
         // Une fois que toutes les affectations ont été réalisées, ont peut envoyer les UR et ainsi traiter le timeslot courant
         for(UR ur : this.urAEnvoyer) {
-            int nbBitsRestant = cellule.getNbBitAEnvoyer(ur.getUtilisateur()) - ur.getNbBits();
+            //int nbBitsRestant = cellule.getNbBitAEnvoyer(ur.getUtilisateur()) - ur.getNbBits();
             //Print.print(getName() + ": UR" + ur.getId() + " > Util" + ur.getUtilisateur().getId() + " : " + ur.getNbBits() + " bits envoyés. Reste " + ((nbBitsRestant < 0) ? "0" : nbBitsRestant) + " bits");
  
             this.calculNbBitsTransmis(ur);

@@ -1,7 +1,8 @@
 package simulation.graphique.generateur;
 
 public class GraphInfo {
-    public String GraphName;
-    public String AlgoName;
-    public String ChargeValue;
+    public String Graph;
+    public String Algo;
+    public String Charge;
+    public String Distance = null;
 }

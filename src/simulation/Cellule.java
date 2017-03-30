@@ -1,6 +1,5 @@
 package simulation;
 
-import simulation.helper.Rnd;
 import algorithme.Algorithme;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -8,7 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import simulation.graphique.Graph_Paquet_Delai;
+import simulation.graphique.Graph_Temps_Delai;
 import simulation.helper.Print;
 
 public class Cellule {	
@@ -26,7 +25,7 @@ public class Cellule {
     private int nbTotalBitsGenere = 0;
     private int nbTotalBitsEnvoye = 0;
     private int nbBitsEnvoye50ticks = 0;
-    private int nbTotalURutilisee = 0;
+    private int nbTotalURenvoye = 0;
     private int nbURutiliseeTimeslot = 0;
     
     public Cellule(int numero) {	
@@ -60,8 +59,8 @@ public class Cellule {
         return this.nbTotalBitsEnvoye;
     }
 
-    public int getNbTotalURutilisee() {
-        return this.nbTotalURutilisee;
+    public int getNbTotalURenvoye() {
+        return this.nbTotalURenvoye;
     }
 
     public List<Utilisateur> getUsers() {
@@ -86,13 +85,6 @@ public class Cellule {
                 this.ur.get(i).setAffectation(null);
         }
     }
-
-    /*public void addPaquetsFromInternet() {
-        for(int i = 0; i < users.size(); i++) {
-            int nbBits = ThreadLocalRandom.current().nextInt(10, 1000);
-            this.addPaquetsFromInternet(users.get(i), nbBits);
-        }		
-    }*/
 
     /**
      * Ajoute des paquets à un utilisateur
@@ -255,7 +247,7 @@ public class Cellule {
      * @param ur UR à envoyer
      */
     public void envoyerUR(UR ur) {    	
-    	this.nbTotalURutilisee++; 	
+    	this.nbTotalURenvoye++; 	
     	this.nbURutiliseeTimeslot++;
         int nbBitsRestantUR = ur.getNbBits();
         Paquet paquetPrecedent = this.getPaquetActuel(ur.getUtilisateur());
@@ -279,7 +271,7 @@ public class Cellule {
                     paquetActuel.addUrUtilisee(ur);
                     nbBitsRestantUR -= nbBitsPaquetActuel;
                     Print.paquetEnvoye(ur, paquetActuel, this.algo);                    
-                    Graph_Paquet_Delai.add(Simulation.getTemps(), paquetActuel.getDelai(), ur.getUtilisateur().getDistance()); 
+                    Graph_Temps_Delai.add(Simulation.getTemps(), paquetActuel.getDelai(), ur.getUtilisateur().getDistance()); 
                 }
                 else { // Si l'UR sera pleinement utilisée
                     paquetActuel.subNbBits(nbBitsRestantUR); // On "envoi le paquet" : On retire des bits au paquet
@@ -290,7 +282,7 @@ public class Cellule {
                     nbBitsRestantUR = 0;
                     if(paquetActuel.getNbBitActuel() == 0) { // Si on a consommé entierement un paquet
                         Print.paquetEnvoye(ur, paquetActuel, this.algo);
-                        Graph_Paquet_Delai.add(Simulation.getTemps(), paquetActuel.getDelai(), ur.getUtilisateur().getDistance()); 
+                        Graph_Temps_Delai.add(Simulation.getTemps(), paquetActuel.getDelai(), ur.getUtilisateur().getDistance()); 
                     }
                 }                
             }      

@@ -55,12 +55,9 @@ public class GraphFusion {
     private static GraphInfo getGraphInfo(String file) {
         GraphInfo gi = new GraphInfo();
         String[] raw = file.split("-");
-        if(raw.length < 3) {
-            return null;
-        }
-        gi.GraphName = raw[0];
-        gi.AlgoName = raw[1];
-        gi.ChargeValue = raw[2];
+        gi.Graph = raw[0];
+        gi.Algo = raw[1];
+        gi.Charge = raw[2];
         return gi;
     } 
     
@@ -70,7 +67,7 @@ public class GraphFusion {
         for (final File fileEntry : folder.listFiles()) {
             if (!fileEntry.isDirectory()) {
                 GraphInfo gi = getGraphInfo(fileEntry.getName());                
-                if(/*!fileEntry.getPath().toLowerCase().contains("merged") &&*/ !fileEntry.getPath().toLowerCase().contains("moyennevaleursfinales") && gi.AlgoName.toLowerCase().equals(algo.toLowerCase()) /*&& gi.ChargeValue.toLowerCase().equals(charge.toLowerCase())*/) {
+                if(/*!fileEntry.getPath().toLowerCase().contains("merged") &&*/ !fileEntry.getPath().toLowerCase().contains("moyennevaleursfinales") && gi.Algo.toLowerCase().equals(algo.toLowerCase()) /*&& gi.ChargeValue.toLowerCase().equals(charge.toLowerCase())*/) {
                     files.add(fileEntry.getPath());
                 }
             }

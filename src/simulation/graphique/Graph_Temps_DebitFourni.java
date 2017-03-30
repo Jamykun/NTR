@@ -11,11 +11,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import simulation.Simulation;
 
-public class GraphDebitFourni_Temps {
-    private static HashMap<Integer, Integer> points = new HashMap<>();
-    private static String GRAPH_NAME = "GraphDebitFourni_Temps";
+public class Graph_Temps_DebitFourni {
+    private static HashMap<Integer, Double> points = new HashMap<>();
+    private static String GRAPH_NAME = "Graph_Temps_DebitFourni";
     
-    public static void add(int x, int y) {
+    public static void add(int x, double y) {
         points.put(x, y);
     }
     

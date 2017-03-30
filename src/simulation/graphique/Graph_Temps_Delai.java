@@ -13,10 +13,10 @@ import java.util.TreeSet;
 import simulation.DistancePointAcces;
 import simulation.Simulation;
 
-public class Graph_Paquet_Delai {
+public class Graph_Temps_Delai {
     private static HashMap<Integer, ArrayList<Integer>> pointsUltiProche = new HashMap<>();
     private static HashMap<Integer, ArrayList<Integer>> pointsUltiLoin = new HashMap<>();
-    private static final String GRAPH_NAME = "Graph_Paquet_Delai";
+    private static final String GRAPH_NAME = "Graph_Temps_Delai";
     
     public static void add(int temps, int delaiPaquet, DistancePointAcces dist) {
         if(dist == DistancePointAcces.LOIN) {

@@ -88,8 +88,8 @@ public abstract class Algorithme {
     /**
      * @return Taux d'utilisation des UR dans le timeslot courant
      */
-    public int getTauxUtilisationUR() {
-    	return Math.round((this.urAEnvoyer.size() / (float)NB_PORTEUSES) * 100);
+    public double getTauxUtilisationUR() {
+    	return (this.urAEnvoyer.size() / (double)NB_PORTEUSES) * 100;
     }
     
     /**

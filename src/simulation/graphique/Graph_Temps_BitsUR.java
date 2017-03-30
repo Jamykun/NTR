@@ -17,7 +17,7 @@ public class Graph_Temps_BitsUR {
     private static final String GRAPH_NAME = "Graph_Temps_BitsUR";
     private static HashMap<Integer, Double> points = new HashMap<>();
 
-    public static void add(int x, Double y) {
+    public static void add(int x, double y) {
         points.put(x, y);
     }
 
