@@ -23,10 +23,11 @@ public class Simulations {
         }
         
         // Lancement des simulations avec les deux algorithmes
-        System.out.println("Lancement de " + (NB_UTILISATEURS_MAX*2) +" simulation de 2 à " + NB_UTILISATEURS_MAX + " utilisateurs avec RR et MaxSNR");
+        System.out.println("Lancement de " + (NB_UTILISATEURS_MAX*2) +" simulations de 2 à " + NB_UTILISATEURS_MAX + " utilisateurs avec RR et MaxSNR");
         for(int nbUtil = 2; nbUtil <= NB_UTILISATEURS_MAX; nbUtil++) {
             String[] params = { nbUtil+"", "RR" }; 
             Simulation.main(params); 
+            System.out.println(((nbUtil*2)-1) + "/" + (NB_UTILISATEURS_MAX*2) + " simulations effectuées");
             
             String[] params2 = { nbUtil+"", "MaxSNR" };
             Simulation.main(params2);  
