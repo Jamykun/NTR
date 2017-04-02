@@ -2,10 +2,12 @@ package algorithme;
 
 import java.util.Iterator;
 import simulation.Cellule;
+import simulation.Simulation;
 
 import static simulation.Simulation.NB_PORTEUSES;
 import simulation.UR;
 import simulation.Utilisateur;
+import simulation.graphique.Graph_Temps_MknMoyen;
 import simulation.helper.Print;
 
 public class RR extends Algorithme {
@@ -42,9 +44,12 @@ public class RR extends Algorithme {
 
         // Si on a trouvé un utilisateur qui à un paquet à envoyer, on lui alloue une UR
         if(util != null && paquetAEnvoyer){  
-            ur.setNbBits(util.getMkn());
+            int mkn = util.getMkn();
+            ur.setNbBits(mkn);
             this.addNbBitsATransmettre(util, ur.getNbBits());
-            this.affecterUR(ur, util);      
+            this.affecterUR(ur, util); 
+            Graph_Temps_MknMoyen.add(Simulation.getTemps(), mkn, util.getDistance());
+            
             Print.affectationUR(this, util, ur);
         }
 

@@ -7,6 +7,7 @@ import simulation.graphique.Graph_Temps_DebitFourni;
 import simulation.graphique.Graph_Temps_BitsUR;
 import simulation.graphique.Graph_Temps_TauxUR;
 import java.io.IOException;
+import simulation.graphique.Graph_Temps_MknMoyen;
 import simulation.helper.Print;
 import simulation.helper.Rnd;
 
@@ -97,6 +98,7 @@ public class Simulation {
         Graph_Temps_TauxUR.GenerateGraph();
         Graph_Temps_Delai.GenerateGraph();
         Graph_Temps_DebitFourni.GenerateGraph();
+        Graph_Temps_MknMoyen.GenerateGraph();
     }
 
     public static int getTemps() {		

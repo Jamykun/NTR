@@ -1,10 +1,12 @@
 package algorithme;
 
 import simulation.Cellule;
+import simulation.Simulation;
 
 import static simulation.Simulation.NB_PORTEUSES;
 import simulation.UR;
 import simulation.Utilisateur;
+import simulation.graphique.Graph_Temps_MknMoyen;
 import simulation.helper.Print;
 
 public class MaxSNR extends Algorithme { 
@@ -44,7 +46,8 @@ public class MaxSNR extends Algorithme {
         if(utilMknmax != null) {            
             ur.setNbBits(mknmax); 
             this.addNbBitsATransmettre(utilMknmax, ur.getNbBits()); 
-            this.affecterUR(ur, utilMknmax);             
+            this.affecterUR(ur, utilMknmax);     
+            Graph_Temps_MknMoyen.add(Simulation.getTemps(), mknmax, utilMknmax.getDistance());
         
             //Print.print("Affecté à Util " + utilMknmax.getId() + " - UR : "+ur.getId() + " Mkn: " + mknmax);
             Print.affectationUR(this, utilMknmax, ur);

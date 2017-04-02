@@ -42,7 +42,9 @@ public class Simulations {
         String[] params3 = { "Graph_Temps_DebitFourni", (Simulation.SIMULATION_TIMESLOTS / 400)+"" };
         GraphMoyenneValeursFinales.main(params3);
         String[] params4 = { "Graph_Temps_Delai", (Simulation.SIMULATION_TIMESLOTS / 30)+"" };
-        GraphMoyenneValeursFinales.main(params4);    
+        GraphMoyenneValeursFinales.main(params4);  
+        String[] params5 = { "Graph_Temps_MknMoyen", Simulation.SIMULATION_TIMESLOTS+"" };
+        GraphMoyenneValeursFinales.main(params5); 
         
         System.out.println("Toutes les simulations sont terminées");
     }
