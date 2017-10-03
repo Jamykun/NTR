@@ -12,6 +12,10 @@ import simulation.helper.Print;
 public class MaxSNR extends Algorithme { 
     public MaxSNR(Cellule cellule) {
         super(cellule);
+        /**
+         * AQUI HICISTE TU CAMBIO DESDE ECLIPSE
+         * 
+         */
     }  
     
     /**
